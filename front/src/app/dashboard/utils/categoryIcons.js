@@ -1,0 +1,35 @@
+// utils/categoryIcons.js
+import {
+  Briefcase,
+  TrendingUp,
+  Banknote,
+  Gift,
+  Wallet,
+  Landmark,
+  Home,
+  Utensils,
+  Car,
+  Heart,
+  GraduationCap,
+  ShoppingCart,
+  Plane,
+  CreditCard,
+} from "lucide-react";
+
+export const categoryMap = {
+  salario: { name: "Salário", icon: Briefcase },
+  investimentos: { name: "Investimentos", icon: TrendingUp },
+  emprestimos: { name: "Empréstimos", icon: Banknote },
+  presente: { name: "Presente", icon: Gift },
+  bonus: { name: "Bônus", icon: Wallet },
+  outros_entrada: { name: "Outros", icon: Landmark },
+  moradia: { name: "Moradia", icon: Home },
+  alimentacao: { name: "Alimentação", icon: Utensils },
+  transporte: { name: "Transporte", icon: Car },
+  saude: { name: "Saúde", icon: Heart },
+  educacao: { name: "Educação", icon: GraduationCap },
+  mercado: { name: "Mercado", icon: ShoppingCart },
+  lazer: { name: "Lazer", icon: Plane },
+  cartao: { name: "Cartão de Crédito", icon: CreditCard },
+  outros_saida: { name: "Outros", icon: Wallet },
+};
