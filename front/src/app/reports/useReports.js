@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-
+import useInsightGenerator from "./insight-generator";
 import {
   TrendingUp,
   TrendingDown,
@@ -17,8 +17,6 @@ import { jsPDF } from "jspdf";
 export default function ReportsPage() {
   const router = useRouter();
   const [transactions, setTransactions] = useState([]);
-  const [insights, setInsights] = useState([]);
-  const [recommendations, setRecommendations] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [activeTab, setActiveTab] = useState("insights");
@@ -27,8 +25,14 @@ export default function ReportsPage() {
   const [userName, setUserName] = useState("");
   const [categoryData, setCategoryData] = useState([]);
   const [monthlyData, setMonthlyData] = useState([]);
+  const [summary, setSummary] = useState(null);
+  const [forecastData, setForecastData] = useState([]);
+  const [historicalData, setHistoricalData] = useState([]);
 
   const token = typeof window !== "undefined" ? localStorage.getItem("token") : null;
+
+  // Use the enhanced insight generator
+  const { insights, recommendations } = useInsightGenerator(transactions, summary);
 
   useEffect(() => {
     if (!token) {
@@ -57,14 +61,14 @@ export default function ReportsPage() {
       const transData = await transactionsRes.json();
       const profileData = await profileRes.json();
       const summaryData = await summaryRes.json();
-      console.log(summaryData);
+
       setTransactions(transData);
       setUserName(profileData.name || "Usuário");
+      setSummary(summaryData);
 
-      // Process data for insights and recommendations
-      generateInsights(transData, summaryData);
-      generateRecommendations(transData, summaryData);
+      // Process data for charts
       processChartData(transData);
+      generateForecastData();
     } catch (err) {
       setError("Erro ao carregar dados.");
       console.error(err);
@@ -79,68 +83,42 @@ export default function ReportsPage() {
     const monthlyMap = {};
 
     transactions.forEach((transaction) => {
-      if (transaction.type === "saida") {
-        // Process category data
-        const category = transaction.category || "outros_saida";
-        const amount =
-          typeof transaction.amount === "object" && transaction.amount.$numberDecimal
-            ? Number.parseFloat(transaction.amount.$numberDecimal)
-            : Number.parseFloat(transaction.amount) || 0;
+      // Process all transactions for monthly data
+      const amount =
+        typeof transaction.amount === "object" && transaction.amount.$numberDecimal
+          ? Number.parseFloat(transaction.amount.$numberDecimal)
+          : Number.parseFloat(transaction.amount) || 0;
 
-        categoryMap[category] = (categoryMap[category] || 0) + amount;
+      // Process monthly data
+      const date = new Date(transaction.createdAt);
+      const monthYear = `${date.getMonth() + 1}/${date.getFullYear()}`;
 
-        // Process monthly data
-        const date = new Date(transaction.createdAt);
-        const monthYear = `${date.getMonth() + 1}/${date.getFullYear()}`;
-
-        if (!monthlyMap[monthYear]) {
-          monthlyMap[monthYear] = { income: 0, expense: 0 };
-        }
-
-        if (transaction.type === "entrada") {
-          monthlyMap[monthYear].income += amount;
-        } else {
-          monthlyMap[monthYear].expense += amount;
-        }
+      if (!monthlyMap[monthYear]) {
+        monthlyMap[monthYear] = { income: 0, expense: 0, savings: 0 };
       }
+
+      if (transaction.type === "entrada") {
+        monthlyMap[monthYear].income += amount;
+      } else if (transaction.type === "saida") {
+        monthlyMap[monthYear].expense += amount;
+
+        // Process category data for expenses
+        const category = transaction.category || "outros_saida";
+        categoryMap[category] = (categoryMap[category] || 0) + amount;
+      }
+
+      // Calculate savings
+      monthlyMap[monthYear].savings =
+        monthlyMap[monthYear].income - monthlyMap[monthYear].expense;
     });
 
     // Convert category map to array for chart
     const categoryChartData = Object.entries(categoryMap).map(([category, value]) => {
-      let label = category;
-
-      // Map category codes to readable names
-      switch (category) {
-        case "alimentacao":
-          label = "Alimentação";
-          break;
-        case "transporte":
-          label = "Transporte";
-          break;
-        case "lazer":
-          label = "Lazer";
-          break;
-        case "moradia":
-          label = "Moradia";
-          break;
-        case "saude":
-          label = "Saúde";
-          break;
-        case "educacao":
-          label = "Educação";
-          break;
-        case "emprestimos":
-          label = "Empréstimos";
-          break;
-        case "outros_saida":
-          label = "Outros";
-          break;
-        default:
-          label = category;
-      }
+      const label = getCategoryName(category);
 
       return {
         category: label,
+        categoryKey: category,
         value: value,
       };
     });
@@ -158,363 +136,60 @@ export default function ReportsPage() {
           income: data.income,
           expense: data.expense,
           balance: data.income - data.expense,
+          savings: data.savings > 0 ? data.savings : 0,
         };
       });
 
     setCategoryData(categoryChartData);
     setMonthlyData(monthlyChartData);
+    setHistoricalData(monthlyChartData);
   };
 
-  const generateInsights = (transactions, summary) => {
-    const insights = [];
+  const generateForecastData = () => {
+    // This would ideally come from an API with ML predictions
+    // For now, we'll generate some sample forecast data
 
-    const totalIncome = summary.entradas || 0;
-    const totalExpenses = summary.saidas || 0;
-    const balance = totalIncome - totalExpenses;
-    console.log(totalIncome, totalExpenses, balance);
+    // Get the last month from historical data or use current month
+    const lastMonth =
+      historicalData.length > 0
+        ? historicalData[historicalData.length - 1]
+        : { month: new Date().getMonth() + 1 + "/" + new Date().getFullYear() };
 
-    const expensesByCategory = {};
-    const incomesByCategory = {};
+    const [month, year] = lastMonth.month.split("/").map(Number);
 
-    transactions.forEach((transaction) => {
-      const amount =
-        typeof transaction.amount === "object" && transaction.amount.$numberDecimal
-          ? Number.parseFloat(transaction.amount.$numberDecimal)
-          : Number.parseFloat(transaction.amount);
+    // Generate 6 months of forecast data
+    const forecast = [];
+    for (let i = 1; i <= 6; i++) {
+      const forecastMonth = month + i > 12 ? month + i - 12 : month + i;
+      const forecastYear = month + i > 12 ? year + 1 : year;
 
-      if (transaction.type === "saida") {
-        const category = transaction.category || "outros_saida";
-        expensesByCategory[category] = (expensesByCategory[category] || 0) + amount;
-      } else {
-        const category = transaction.category || "outros_entrada";
-        incomesByCategory[category] = (incomesByCategory[category] || 0) + amount;
-      }
-    });
+      // Base values on the average of historical data with some randomness
+      const avgIncome =
+        historicalData.reduce((sum, item) => sum + item.income, 0) /
+        Math.max(1, historicalData.length);
+      const avgExpense =
+        historicalData.reduce((sum, item) => sum + item.expense, 0) /
+        Math.max(1, historicalData.length);
 
-    if (balance >= 0) {
-      insights.push({
-        id: "balance-positive",
-        title: "Saldo Positivo",
-        description: `Você tem um saldo positivo de ${formatCurrency(
-          balance
-        )} neste período.`,
-        icon: TrendingUp,
-        color: "green",
-        details:
-          "Manter um saldo positivo é essencial para a saúde financeira. Continue controlando seus gastos e economizando.",
-      });
-    } else {
-      insights.push({
-        id: "balance-negative",
-        title: "Saldo Negativo",
-        description: `Você tem um saldo negativo de ${formatCurrency(
-          Math.abs(balance)
-        )} neste período.`,
-        icon: TrendingDown,
-        color: "red",
-        details:
-          "Um saldo negativo indica que você está gastando mais do que ganha. Considere reduzir despesas não essenciais.",
+      // Add some trend and seasonality
+      const seasonalFactor = forecastMonth >= 11 || forecastMonth <= 1 ? 1.2 : 1.0; // Higher in Nov-Jan
+      const trendFactor = 1 + i * 0.02; // 2% growth per month
+
+      const income = avgIncome * trendFactor * (0.95 + Math.random() * 0.1);
+      const expense =
+        avgExpense * seasonalFactor * trendFactor * (0.9 + Math.random() * 0.2);
+      const savings = Math.max(0, income - expense);
+
+      forecast.push({
+        month: `${forecastMonth}/${forecastYear}`,
+        income,
+        expense,
+        balance: income - expense,
+        savings,
       });
     }
 
-    const totalExpensesValue = Object.values(expensesByCategory).reduce(
-      (sum, value) => sum + value,
-      0
-    );
-
-    Object.entries(expensesByCategory).forEach(([category, amount]) => {
-      const percentage = (amount / totalExpensesValue) * 100;
-
-      if (percentage > 30) {
-        let categoryName = category;
-
-        switch (category) {
-          case "alimentacao":
-            categoryName = "Alimentação";
-            break;
-          case "transporte":
-            categoryName = "Transporte";
-            break;
-          case "lazer":
-            categoryName = "Lazer";
-            break;
-          case "moradia":
-            categoryName = "Moradia";
-            break;
-          case "saude":
-            categoryName = "Saúde";
-            break;
-          case "educacao":
-            categoryName = "Educação";
-            break;
-          case "emprestimos":
-            categoryName = "Empréstimos";
-            break;
-          case "cartao_credito":
-            categoryName = "Cartão de Crédito";
-            break;
-          case "outros_saida":
-            categoryName = "Outros";
-            break;
-          default:
-            categoryName = category;
-        }
-
-        insights.push({
-          id: `high-spending-${category.toLowerCase()}`,
-          title: `Alto Gasto em ${categoryName}`,
-          description: `${percentage.toFixed(
-            1
-          )}% dos seus gastos são em ${categoryName} (${formatCurrency(amount)}).`,
-          icon: AlertTriangle,
-          color: "amber",
-          details: `Você está gastando uma proporção significativa do seu orçamento em ${categoryName.toLowerCase()}. Considere analisar esses gastos para possíveis ajustes.`,
-        });
-      }
-    });
-
-    if (expensesByCategory["emprestimos"] > 0) {
-      const loanAmount = expensesByCategory["emprestimos"];
-      const loanPercentage = (loanAmount / totalExpensesValue) * 100;
-
-      if (loanPercentage > 20) {
-        insights.push({
-          id: "high-loan-payments",
-          title: "Pagamentos de Empréstimos Elevados",
-          description: `${loanPercentage.toFixed(
-            1
-          )}% dos seus gastos são com empréstimos (${formatCurrency(loanAmount)}).`,
-          icon: AlertTriangle,
-          color: "red",
-          details:
-            "Uma alta proporção de pagamentos de empréstimos pode comprometer sua saúde financeira. Considere estratégias para reduzir suas dívidas mais rapidamente.",
-        });
-      }
-    }
-
-    if (balance > 0) {
-      const savingsRate = (balance / totalIncome) * 100;
-
-      if (savingsRate < 10) {
-        insights.push({
-          id: "low-savings-rate",
-          title: "Taxa de Economia Baixa",
-          description: `Você está economizando apenas ${savingsRate.toFixed(
-            1
-          )}% da sua renda.`,
-          icon: Info,
-          color: "amber",
-          details:
-            "Especialistas recomendam economizar pelo menos 20% da sua renda. Tente aumentar sua taxa de economia para uma reserva mais sólida.",
-        });
-      } else if (savingsRate >= 20) {
-        insights.push({
-          id: "good-savings-rate",
-          title: "Boa Taxa de Economia",
-          description: `Você está economizando ${savingsRate.toFixed(1)}% da sua renda.`,
-          icon: TrendingUp,
-          color: "green",
-          details:
-            "Parabéns! Sua taxa de economia é excelente e contribui para sua segurança financeira de longo prazo.",
-        });
-      }
-    }
-
-    // Novo insight: gastos fixos altos (moradia + transporte + educação + saúde)
-    const fixedCategories = ["moradia", "transporte", "educacao", "saude"];
-    const fixedTotal = fixedCategories.reduce(
-      (sum, cat) => sum + (expensesByCategory[cat] || 0),
-      0
-    );
-    const fixedPercentage = (fixedTotal / totalExpensesValue) * 100;
-
-    if (fixedPercentage > 70) {
-      insights.push({
-        id: "high-fixed-expenses",
-        title: "Gastos Fixos Muito Altos",
-        description: `Seus gastos fixos representam ${fixedPercentage.toFixed(
-          1
-        )}% do total.`,
-        icon: AlertTriangle,
-        color: "red",
-        details:
-          "Quando os gastos fixos ultrapassam 70% das despesas, sobra pouco espaço para economias ou imprevistos. Reavalie seus compromissos mensais se possível.",
-      });
-    }
-
-    // Novo insight: Diversificação de gastos
-    const categoryCount = Object.keys(expensesByCategory).length;
-    if (categoryCount <= 3 && totalExpenses > 0) {
-      insights.push({
-        id: "low-expense-diversity",
-        title: "Pouca Diversificação de Gastos",
-        description: `Seus gastos estão concentrados em poucas categorias (${categoryCount} principais).`,
-        icon: Info,
-        color: "amber",
-        details:
-          "Uma alta concentração de gastos em poucas áreas pode indicar riscos ou dependência de certos serviços. Avalie se há desequilíbrios.",
-      });
-    }
-
-    setInsights(insights);
-  };
-
-  const generateRecommendations = (transactions, summary) => {
-    const recommendations = [];
-
-    const totalIncome = summary.totalEntradas || 0;
-    const totalExpenses = summary.totalSaidas || 0;
-    const balance = totalIncome - totalExpenses;
-
-    const expensesByCategory = {};
-
-    transactions.forEach((transaction) => {
-      if (transaction.type === "saida") {
-        const category = transaction.category || "outros_saida";
-        const amount =
-          typeof transaction.amount === "object" && transaction.amount.$numberDecimal
-            ? Number.parseFloat(transaction.amount.$numberDecimal)
-            : Number.parseFloat(transaction.amount);
-
-        expensesByCategory[category] = (expensesByCategory[category] || 0) + amount;
-      }
-    });
-
-    const totalExpensesValue = Object.values(expensesByCategory).reduce(
-      (sum, value) => sum + value,
-      0
-    );
-
-    if (balance < 0) {
-      recommendations.push({
-        id: "reduce-expenses",
-        title: "Reduza Despesas Não Essenciais",
-        description: "Seus gastos estão superando sua renda. Corte o que for supérfluo.",
-        priority: "alta",
-        actionItems: [
-          "Identifique e corte gastos supérfluos",
-          "Estabeleça um orçamento mensal rigoroso",
-          "Busque alternativas mais econômicas para suas necessidades",
-        ],
-      });
-    }
-
-    if (expensesByCategory["emprestimos"]) {
-      const loanAmount = expensesByCategory["emprestimos"];
-      const loanPercentage = (loanAmount / totalExpensesValue) * 100;
-
-      if (loanPercentage > 20) {
-        recommendations.push({
-          id: "manage-debt",
-          title: "Gerencie Suas Dívidas",
-          description: "Pagamentos com empréstimos estão muito altos.",
-          priority: "alta",
-          actionItems: [
-            "Priorize o pagamento de dívidas com juros mais altos",
-            "Considere consolidar dívidas para reduzir os juros",
-            "Evite contrair novas dívidas enquanto não quitar as atuais",
-          ],
-        });
-      }
-    }
-
-    Object.entries(expensesByCategory).forEach(([category, amount]) => {
-      const percentage = (amount / totalExpensesValue) * 100;
-
-      if (percentage > 30 && category !== "moradia") {
-        let categoryName = "";
-        let items = [];
-
-        switch (category) {
-          case "alimentacao":
-            categoryName = "Alimentação";
-            items = [
-              "Planeje refeições para evitar desperdícios",
-              "Evite comer fora com frequência",
-              "Pesquise preços antes de comprar",
-            ];
-            break;
-          case "transporte":
-            categoryName = "Transporte";
-            items = [
-              "Use transporte público quando possível",
-              "Caronas compartilhadas podem economizar combustível",
-              "Reveja o custo-benefício do seu carro atual",
-            ];
-            break;
-          case "lazer":
-            categoryName = "Lazer";
-            items = [
-              "Busque atividades gratuitas ou baratas",
-              "Evite compras por impulso em lazer",
-              "Use cupons de desconto em passeios",
-            ];
-            break;
-          default:
-            categoryName = category;
-            items = [
-              "Analise os gastos dessa categoria",
-              "Defina um limite mensal",
-              "Pesquise opções mais econômicas",
-            ];
-        }
-
-        recommendations.push({
-          id: `optimize-${category}`,
-          title: `Otimize Gastos com ${categoryName}`,
-          description: `Seus gastos com ${categoryName.toLowerCase()} representam ${percentage.toFixed(
-            1
-          )}% do total.`,
-          priority: "média",
-          actionItems: items,
-        });
-      }
-    });
-
-    if (balance >= 0 && !recommendations.some((r) => r.id === "emergency-fund")) {
-      recommendations.push({
-        id: "emergency-fund",
-        title: "Crie um Fundo de Emergência",
-        description:
-          "Tenha uma reserva para imprevistos. O ideal são 3 a 6 meses de despesas guardados.",
-        priority: "média",
-        actionItems: [
-          "Defina uma meta (ex: 6 meses de despesas)",
-          "Automatize transferências para poupança",
-          "Mantenha em local seguro e acessível",
-        ],
-      });
-    }
-
-    if (balance > 0 && !recommendations.some((r) => r.id === "invest")) {
-      recommendations.push({
-        id: "invest",
-        title: "Comece a Investir",
-        description: "Saldo positivo? Hora de fazer seu dinheiro render.",
-        priority: "baixa",
-        actionItems: [
-          "Estude investimentos de baixo risco",
-          "Experimente Tesouro Direto ou CDBs",
-          "Considere falar com um especialista financeiro",
-        ],
-      });
-    }
-
-    if (!recommendations.some((r) => r.id === "budget")) {
-      recommendations.push({
-        id: "budget",
-        title: "Planeje seu Orçamento",
-        description: "Um bom orçamento é o primeiro passo para ter controle financeiro.",
-        priority: "média",
-        actionItems: [
-          "Use a regra 50-30-20",
-          "Revise seu orçamento todo mês",
-          "Use apps de controle financeiro",
-        ],
-      });
-    }
-
-    setRecommendations(recommendations);
+    setForecastData(forecast);
   };
 
   const handleLogout = () => {
@@ -653,6 +328,51 @@ export default function ReportsPage() {
     doc.save("relatorio_financeiro.pdf");
   };
 
+  const getCategoryName = (category) => {
+    switch (category) {
+      case "alimentacao":
+        return "Alimentação";
+      case "transporte":
+        return "Transporte";
+      case "lazer":
+        return "Lazer";
+      case "moradia":
+        return "Moradia";
+      case "saude":
+        return "Saúde";
+      case "educacao":
+        return "Educação";
+      case "emprestimos":
+        return "Empréstimos";
+      case "cartao_credito":
+        return "Cartão de Crédito";
+      case "outros_saida":
+        return "Outros";
+      default:
+        return category;
+    }
+  };
+
+  // Animation variants for page elements
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.1,
+      },
+    },
+  };
+
+  const itemVariants = {
+    hidden: { y: 20, opacity: 0 },
+    visible: {
+      y: 0,
+      opacity: 1,
+      transition: { type: "spring", stiffness: 100 },
+    },
+  };
+
   return {
     transactions,
     insights,
@@ -663,6 +383,8 @@ export default function ReportsPage() {
     setActiveTab,
     timeframe,
     setTimeframe,
+    itemVariants,
+    containerVariants,
     expandedInsight,
     setExpandedInsight,
     userName,
@@ -672,8 +394,7 @@ export default function ReportsPage() {
     formatCurrency,
     handleExportPDF,
     setTransactions,
-    setInsights,
-    setRecommendations,
+
     setLoading,
     setError,
     setActiveTab,
@@ -683,8 +404,12 @@ export default function ReportsPage() {
     setCategoryData,
     setMonthlyData,
     processChartData,
-    generateInsights,
-    generateRecommendations,
+    historicalData,
+    setForecastData,
+    forecastData,
+    generateForecastData,
+    getCategoryName,
+
     fetchData,
   };
 }

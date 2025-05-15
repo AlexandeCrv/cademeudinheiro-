@@ -10,6 +10,7 @@ import authRoutes from "./routes/auth.routes.js";
 import goalRoutes from "./routes/goal.routes.js";
 import financeRoutes from "./routes/finance.routes.js";
 import profileRoutes from "./routes/profile.routes.js";
+import aiRoutes from "./routes/ai.routes.js";
 
 dotenv.config();
 
@@ -28,7 +29,7 @@ app.use("/auth", authRoutes);
 app.use("/transactions", transactionRoutes);
 app.use("/goals", goalRoutes);
 app.use("/profile", profileRoutes);
-
+app.use("/ai", aiRoutes);
 app.get("/", (req, res) => {
   res.send("API FinanControl rodando 🚀");
 });

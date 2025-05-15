@@ -28,6 +28,7 @@ body.dark {
 body {
   background-color: #ffffff; /* Fundo claro */
   color: #333333; /* Texto escuro */
+  font-family: aliance, sans-serif;
 }
 
 @theme inline {
@@ -144,4 +145,29 @@ body {
   body {
     @apply bg-background text-foreground;
   }
+}
+.espelhado-transparente-nav {
+  position: relative;
+
+  background: hsla(0, 0%, 80%, 0.05);
+  font-weight: 700;
+  border: none;
+  border-radius: 4px;
+  box-shadow: 0 3px 6px hsla(0, 0%, 80%, 0.4);
+
+  transition: transform 0.2s, box-shadow 0.3s;
+  margin-bottom: 10px;
+  height: 45px;
+  display: flex;
+}
+.espelhado-transparente-nav:before {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 15%;
+  right: 15%;
+  height: 2px;
+  background-color: #ccc;
+  border-radius: 0 0 4px 4px;
+  transition: background-color 0.3s, transform 0.2s;
 }

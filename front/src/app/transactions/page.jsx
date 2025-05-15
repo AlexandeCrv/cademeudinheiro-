@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { motion } from "framer-motion";
 import {
   ArrowUpCircle,
   ArrowDownCircle,
@@ -73,25 +74,40 @@ export default function TransactionsPage() {
       {/* Main Content */}
       <div className="ml-16 md:ml-64 p-6 relative z-10">
         {/* Header */}
-        <header className="flex justify-between items-center mb-8 pb-4 border-b border-purple-900/30">
+        <motion.header
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+          className="flex justify-between items-center mb-8 pb-4 border-b border-purple-900/30"
+        >
           <div>
             <h1 className="text-2xl font-bold bg-gradient-to-r from-purple-400 to-violet-300 bg-clip-text text-transparent">
               Transações
             </h1>
             <p className="text-gray-400">Visualize e gerencie todas as suas transações</p>
           </div>
-        </header>
+        </motion.header>
 
         {/* Gráfico de Transações */}
-        <div className="bg-gradient-to-br from-gray-900 to-gray-800 border border-purple-900/50 rounded-xl p-6 shadow-lg mb-8">
+        <motion.header
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+          className="bg-gradient-to-br from-gray-900 to-gray-800 border border-purple-900/50 rounded-xl p-6 shadow-lg mb-8"
+        >
           <h2 className="text-xl font-bold mb-6 text-white">Histórico de Transações</h2>
           <div className="h-80">
             <LineChart data={chartData} height={320} />
           </div>
-        </div>
+        </motion.header>
 
         {/* Ações e Filtros */}
-        <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6">
+        <motion.header
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+          className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6"
+        >
           <div className="flex items-center gap-4">
             <div className="relative">
               <Search className="h-5 w-5 absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500" />
@@ -156,7 +172,7 @@ export default function TransactionsPage() {
               <Filter className="h-5 w-5" />
             </button>
           </div>
-        </div>
+        </motion.header>
 
         {/* Transações */}
         <div className="bg-gradient-to-br from-gray-900 to-gray-800 border border-purple-900/50 rounded-xl p-6 shadow-lg">

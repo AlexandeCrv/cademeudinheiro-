@@ -35,13 +35,7 @@ const TransactionsList = ({
 }) => {
   const [currentPage, setCurrentPage] = useState(1);
 
-  const [transactionToEdit, setTransactionToEdit] = useState(null);
-
   const totalPages = Math.ceil(filteredTransactions.length / ITEMS_PER_PAGE);
-
-  const handleEdit = (transaction) => {
-    setTransactionToEdit(transaction); // Aqui você pode abrir o modal para edição
-  };
 
   const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
 
@@ -57,7 +51,7 @@ const TransactionsList = ({
 
   return (
     <div className="bg-gradient-to-br from-gray-900 to-gray-800 border border-purple-900/50 rounded-xl p-6 shadow-xl animate-fadeIn">
-      <h2 className="text-xl font-bold mb-6 text-white">Transações Recentes</h2> {" "}
+      <h2 className="text-xl font-bold mb-6 text-white">Transações Recentes</h2>{" "}
       {loading ? (
         <div className="flex justify-center items-center py-12">
           {" "}

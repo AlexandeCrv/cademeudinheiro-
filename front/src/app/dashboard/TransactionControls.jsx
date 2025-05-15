@@ -1,5 +1,6 @@
 import { jsPDF } from "jspdf";
 import { Search, Download } from "lucide-react";
+import { motion } from "framer-motion";
 export default function TransactionControls({
   searchTerm,
   setSearchTerm,
@@ -141,7 +142,12 @@ export default function TransactionControls({
   };
   return (
     <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6">
-      <div className="flex items-center gap-4">
+      <motion.header
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+        className="flex items-center gap-4"
+      >
         <div className="relative">
           <Search className="h-5 w-5 absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500" />
           <input
@@ -152,9 +158,14 @@ export default function TransactionControls({
             className="bg-gray-900 border border-purple-900/50 rounded-lg pl-10 pr-4 py-2 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent w-full md:w-64"
           />
         </div>
-      </div>
+      </motion.header>
 
-      <div className="flex items-center gap-3 self-end md:self-auto">
+      <motion.header
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+        className="flex items-center gap-3 self-end md:self-auto"
+      >
         <div className="flex items-center gap-2 bg-gray-900 border border-purple-900/50 rounded-lg p-1">
           <button
             onClick={() => setActiveFilter("all")}
@@ -194,7 +205,7 @@ export default function TransactionControls({
         >
           <Download className="h-5 w-5" />
         </button>
-      </div>
+      </motion.header>
     </div>
   );
 }

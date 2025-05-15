@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import { motion } from "framer-motion";
 import ResumoCards from "./ResumoCards";
 import TransactionControls from "./TransactionControls";
 import TransactionsList from "./TransactionsList";
@@ -311,7 +312,13 @@ export default function Dashboard() {
       {/* Main Content */}
       <div className="ml-16 relative z-10 md:ml-64 p-6">
         {/* Header */}
-        <header className="flex justify-between items-center mb-8 pb-4 border-b border-purple-900/30">
+
+        <motion.header
+          className="flex justify-between items-center mb-8 pb-4 border-b border-purple-900/30"
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+        >
           <div>
             <h1 className="text-2xl font-bold bg-gradient-to-r from-purple-400 to-violet-300 bg-clip-text text-transparent">
               Dashboard Financeiro
@@ -339,7 +346,7 @@ export default function Dashboard() {
               </div>
             </div>
           </div>
-        </header>
+        </motion.header>
 
         {/* Resumo */}
         {resumo && (

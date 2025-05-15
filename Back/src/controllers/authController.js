@@ -23,6 +23,7 @@ export const registerUser = async (req, res) => {
         email,
         profilePhoto: newUser.profilePhoto,
         gender: newUser.gender,
+        birthDate: newUser.birthDate,
       },
       token,
     });
@@ -48,6 +49,7 @@ export const loginUser = async (req, res) => {
         email,
         profilePhoto: user.profilePhoto,
         gender: user.gender,
+        birthDate: user.birthDate,
       },
       token,
     });
@@ -60,7 +62,7 @@ export const loginUser = async (req, res) => {
 export const getUserProfile = async (req, res) => {
   try {
     const user = await User.findById(req.user._id).select(
-      "name email profilePhoto gender bio phone"
+      "name email profilePhoto gender bio phone birthDate"
     );
     if (!user) return res.status(404).json({ message: "Usuário não encontrado" });
 

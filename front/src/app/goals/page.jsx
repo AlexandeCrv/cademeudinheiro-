@@ -13,7 +13,7 @@ import {
   Sparkles,
 } from "lucide-react";
 import Sidebar from "../dashboard/sidebar";
-
+import { motion } from "framer-motion";
 import useMetas from "./metas";
 export default function GoalsPage() {
   const {
@@ -60,7 +60,12 @@ export default function GoalsPage() {
         </div>
       </div>
       <div className="ml-16 md:ml-64 p-6 z-10 relative">
-        <div className="flex justify-between items-center mb-8">
+        <motion.header
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+          className="flex justify-between items-center mb-8"
+        >
           <div>
             <h1 className="text-2xl font-bold bg-gradient-to-r from-purple-400 to-violet-300 bg-clip-text text-transparent">
               Metas Financeiras
@@ -75,7 +80,7 @@ export default function GoalsPage() {
             <Plus className="h-5 w-5" />
             <span>Nova Meta</span>
           </button>
-        </div>
+        </motion.header>
 
         {/* Celebração quando uma meta é atingida */}
         {showCelebration && (
@@ -118,7 +123,12 @@ export default function GoalsPage() {
         ) : (
           <>
             {/* Resumo */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+            <motion.header
+              initial={{ opacity: 0, y: -20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5 }}
+              className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8"
+            >
               <div className="bg-gradient-to-br from-gray-900 to-gray-800 border border-purple-900/50 rounded-xl p-6 shadow-lg">
                 <div className="flex items-start justify-between mb-4">
                   <div>
@@ -226,10 +236,15 @@ export default function GoalsPage() {
                   );
                 })()}
               </div>
-            </div>
+            </motion.header>
 
             {/* Lista de Metas */}
-            <div className="space-y-6">
+            <motion.header
+              initial={{ opacity: 0, y: -20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5 }}
+              className="space-y-6"
+            >
               {goals.map((goal) => {
                 const progress = (goal.currentAmount / goal.targetAmount) * 100;
                 const daysRemaining = calculateDaysRemaining(goal.deadline);
@@ -391,7 +406,7 @@ export default function GoalsPage() {
                   </div>
                 );
               })}
-            </div>
+            </motion.header>
           </>
         )}
 

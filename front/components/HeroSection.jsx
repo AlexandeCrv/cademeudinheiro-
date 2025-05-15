@@ -1,6 +1,6 @@
 // components/HeroSection.js
 import Image from "next/image";
-import { ArrowUpRight, Clock, BarChart3, Sparkles } from "lucide-react";
+import { ArrowUpRight, Lock, Sparkles } from "lucide-react";
 export default function HeroSection() {
   return (
     <section className="bg-[#0D001B] py-12 ">
@@ -22,15 +22,13 @@ export default function HeroSection() {
             </span>
             que a planilha não te oferece.
           </h1>
-
           <div className="w-full md:w-[490px]">
             <p className="mt-6 mb-8 max-w-[520px] text-base text-[#CCCCCC] font-normal text-center md:text-left">
               Organize seu dinheiro em tempo real em uma solução completa, prática e
               segura. Tenha o controle de finanças que você sempre quis!
             </p>
           </div>
-
-          <div>
+          <div className="flex  gap-4 items-center justify-around md:justify-start">
             <a
               href="/register"
               className="rounded-lg text-base tracking-tight transition-colors ease-in-out duration-300 select-none inline-flex shadow-md text-white font-semibold py-2 pl-6 pr-2 items-center justify-center bg-[#1B2A38] hover:bg-[#0A3A4A]"
@@ -43,17 +41,24 @@ export default function HeroSection() {
                 />
               </div>
             </a>
+            <div className="  w-72 flex  mx-auto text-white">
+              <div className="espelhado-transparente-nav h-10 w-14 mr-2.5 bg-[#1f1f1f] rounded-lg flex items-center justify-center">
+                <Lock className="" />
+              </div>
+              <div>
+                <p className="">Segurança dos seus dados em primeiro lugar</p>
+              </div>
+            </div>
           </div>
         </div>
-
         {/* Imagem */}
-        <div className="md:w-1/2  md:mb-0">
+        <div className="md:w-1/2 hidden md:block md:mb-0">
           <Image
-            height={2500}
-            width={2500}
-            src="/imgHero2.png"
+            height={500}
+            width={500}
+            src="/imgHero4.png"
             alt="herosection"
-            className="h-full w-full object-contain md:rounded-3xl shadow-lg shadow-purple-900/30"
+            className=" w-[600px]  md:rounded-3xl shadow-lg "
           />
         </div>
       </div>

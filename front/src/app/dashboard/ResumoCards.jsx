@@ -261,7 +261,12 @@ export default function ResumoCards({ resumo, openTransactionModal, token }) {
         {/* Animated background effect */}
         <div className="absolute inset-0 bg-gradient-to-r from-green-500/5 to-transparent w-full h-full transform -translate-x-full group-hover:translate-x-0 transition-transform duration-1000"></div>
 
-        <div className="relative z-10">
+        <motion.header
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+          className="relative z-10"
+        >
           <div className="flex items-start justify-between">
             <div>
               <p className="text-gray-400 mb-1">Entradas</p>
@@ -298,11 +303,16 @@ export default function ResumoCards({ resumo, openTransactionModal, token }) {
               </AnimatePresence>
             </div>
           </div>
-        </div>
+        </motion.header>
       </div>
 
       {/* Saídas - com ações em queda */}
-      <div className="bg-gradient-to-br from-gray-900 to-gray-800 border h-[270px] border-purple-900/50 rounded-xl p-6 shadow-lg hover:shadow-purple-900/20 transition-shadow overflow-hidden relative group">
+      <motion.header
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+        className="bg-gradient-to-br from-gray-900 to-gray-800 border h-[270px] border-purple-900/50 rounded-xl p-6 shadow-lg hover:shadow-purple-900/20 transition-shadow overflow-hidden relative group"
+      >
         {/* Animated background effect */}
         <div className="absolute inset-0 bg-gradient-to-r from-red-500/5 to-transparent w-full h-full transform -translate-x-full group-hover:translate-x-0 transition-transform duration-1000"></div>
 
@@ -344,7 +354,7 @@ export default function ResumoCards({ resumo, openTransactionModal, token }) {
             </div>
           </div>
         </div>
-      </div>
+      </motion.header>
 
       {/* Ações rápidas - com design aprimorado */}
       <div className="bg-gradient-to-br from-gray-900 to-gray-800 border h-[270px] border-purple-900/50 rounded-xl overflow-hidden shadow-lg hover:shadow-purple-900/20 transition-shadow">
