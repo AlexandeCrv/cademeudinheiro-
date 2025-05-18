@@ -18,10 +18,8 @@ export default function ForecastChart({ historicalData, forecastData }) {
   const [showInfo, setShowInfo] = useState(false);
   const [timeRange, setTimeRange] = useState("6m");
 
-  // Combine historical and forecast data
   const combinedData = [...historicalData, ...forecastData];
 
-  // Filter data based on selected time range
   const filteredData = () => {
     const now = new Date();
     let monthsToShow = 6;
@@ -40,11 +38,9 @@ export default function ForecastChart({ historicalData, forecastData }) {
         monthsToShow = 6;
     }
 
-    // Get data for the selected range
-    return combinedData.slice(-monthsToShow - 3); // Show a bit more for context
+    return combinedData.slice(-monthsToShow - 3);
   };
 
-  // Format currency for tooltip
   const formatCurrency = (value) => {
     return value.toLocaleString("pt-BR", {
       style: "currency",
@@ -52,10 +48,8 @@ export default function ForecastChart({ historicalData, forecastData }) {
     });
   };
 
-  // Find the index where forecast data starts
   const forecastStartIndex = historicalData.length;
 
-  // Custom tooltip component
   const CustomTooltip = ({ active, payload, label }) => {
     if (active && payload && payload.length) {
       const isForecast =
@@ -88,7 +82,6 @@ export default function ForecastChart({ historicalData, forecastData }) {
     return null;
   };
 
-  // Custom legend
   const renderCustomizedLegend = (props) => {
     const { payload } = props;
 
@@ -200,7 +193,6 @@ export default function ForecastChart({ historicalData, forecastData }) {
             <Tooltip content={<CustomTooltip />} />
             <Legend content={renderCustomizedLegend} />
 
-            {/* Reference line where forecast begins */}
             <ReferenceLine
               x={historicalData[historicalData.length - 1]?.month}
               stroke="#ffffff"

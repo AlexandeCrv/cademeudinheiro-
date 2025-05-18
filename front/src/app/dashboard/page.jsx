@@ -16,9 +16,11 @@ export default function Dashboard() {
   const [transactions, setTransactions] = useState([]);
   const [filteredTransactions, setFilteredTransactions] = useState([]);
   const [resumo, setResumo] = useState(null);
+  const [userRole, setUserRole] = useState("");
   const [userName, setUserName] = useState("");
   const [userProfile, setUserProfile] = useState(null);
   const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
+  const [role, setRole] = useState(false);
 
   const [showSuccess, setShowSuccess] = useState(false);
   const [title, setTitle] = useState("");
@@ -231,6 +233,8 @@ export default function Dashboard() {
       const resumoData = await resumoRes.json();
       const profileData = await profileRes.json();
 
+      setRole(profileData.role);
+
       setTransactions(transData);
       setFilteredTransactions(transData);
       setResumo(resumoData);
@@ -253,7 +257,19 @@ export default function Dashboard() {
     return date.toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" });
   };
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
+    try {
+      await fetch("http://localhost:3001/auth/logout", {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+          "Content-Type": "application/json",
+        },
+      });
+    } catch (error) {
+      console.error("Erro ao deslogar:", error);
+    }
+
     localStorage.removeItem("token");
     router.push("/login");
   };
@@ -298,7 +314,7 @@ export default function Dashboard() {
   return (
     <div className="min-h-screen bg-gray-950 relative text-white overflow-y-clip overflow-x-clip">
       {/* Sidebar */}
-      <Sidebar userName={userName} onLogout={handleLogout} />
+      <Sidebar userName={userName} role={role} onLogout={handleLogout} />
       <div className="absolute inset-0 z-0">
         <div className="absolute top-0 right-0 w-full h-full bg-gradient-to-b from-gray-950 to-gray-900"></div>
         <div className="absolute -top-40 -right-40 w-96 h-96 bg-purple-900/20 rounded-full filter blur-3xl"></div>

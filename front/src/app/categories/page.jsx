@@ -25,7 +25,6 @@ import Sidebar from "../dashboard/sidebar";
 import { useRouter } from "next/navigation";
 import useCategories from "./useCategories";
 
-// Registrar componentes do Chart.js
 ChartJS.register(
   ArcElement,
   Tooltip,
@@ -66,7 +65,6 @@ export default function CategoriesPage() {
         <div className="absolute -top-40 -right-40 w-96 h-96 bg-purple-900/20 rounded-full filter blur-3xl"></div>
         <div className="absolute -bottom-20 -left-20 w-96 h-96 bg-violet-900/20 rounded-full filter blur-3xl"></div>
 
-        {/* Grid Pattern */}
         <div className="absolute inset-0 opacity-5">
           <div className="h-full w-full bg-[linear-gradient(to_right,#8B5CF6_1px,transparent_1px),linear-gradient(to_bottom,#8B5CF6_1px,transparent_1px)] bg-[size:4rem_4rem]"></div>
         </div>

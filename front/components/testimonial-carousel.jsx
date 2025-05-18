@@ -6,31 +6,31 @@ import { Star, Quote } from "lucide-react";
 const testimonials = [
   {
     id: 1,
-    name: "Leo Pieta",
+    name: "Camila Peixoto",
     rating: 5,
     text: "Estou usando o App a 1 ano e está sendo incrível. Minha vida toda eu não tinha controle dos meus gastos e do meu dinheiro, e com esse app eu consigo controlar tudo isso e ainda economizar. Recomendo para todos experimentar. Vocês não vão se arrepender",
   },
   {
     id: 2,
-    name: "Ollimesmo",
+    name: "Karim Meirea",
     rating: 5,
-    text: "Uso há mais de 3 ANOS, e pagar a assinatura foi uma das melhores decisões que tomei na minha vida toda. O valor é praticamente um trocado quando você começa a ENXERGAR seus vacíos e começa a ganhar dinheiro pela ECONOMIA absurda que você alcança com organização e controle dentro de poucas semanas!",
+    text: "Uso há mais de 3 ANOS, e sem condições, como um app bom desse não é pago? uma das melhores decisões que tomei na minha vida financeira foi me registrar aqui. Fiquei besta quando comecei a ENXERGAR meus vicíos e ganhar dinheiro pela ECONOMIA absurda que você alcança com organização e controle dentro de poucas semanas!",
   },
   {
     id: 3,
-    name: "NinjazinXPTO",
+    name: "Luiz Gustavo",
     rating: 5,
-    text: "Excelente aplicativo atende a todas as minhas necessidades e ajuda a manter a minha saúde financeira. Vale cada centavo.",
+    text: "Excelente aplicativo atende a todas as minhas necessidades e ajuda a manter a minha saúde financeira. Nem acredito que é de graça.",
   },
   {
     id: 4,
-    name: "Eduardo",
+    name: "Maria Clara Galvão",
     rating: 5,
-    text: "Com o Organizze consegui visualizar e passar a ter controle sobre cada gasto e cada entrada. O melhor é o fato de conseguir implementar um método de economia que eu já conhecia, mas que sem o app não está indo para frente.",
+    text: "Com a CMD consegui visualizar e passar a ter controle sobre cada gasto e cada entrada. O melhor é o fato de conseguir implementar um método de economia que eu já conhecia, mas que sem o app não está indo para frente.",
   },
   {
     id: 5,
-    name: "Marcela",
+    name: "Bibiu Antoni",
     rating: 5,
     text: "Fantástico! Consegui finalmente organizar minha planilha financeira. Já testei diversos apps e este é excelente e tem ótimo atendimento da equipe!",
   },
@@ -57,7 +57,7 @@ export default function TestimonialCarousel() {
   return (
     <div
       id="avaliacoes"
-      className="relative mt-10 overflow-hidden bg-gradient-to-b from-gray-950 to-gray-900 py-16 md:py-24"
+      className="relative mt-24 overflow-hidden bg-gradient-to-b from-gray-950 to-gray-900 py-16 md:py-24"
       onMouseEnter={() => setIsPaused(true)}
       onMouseLeave={() => setIsPaused(false)}
     >
@@ -67,7 +67,6 @@ export default function TestimonialCarousel() {
       </div>
 
       <div className="container mx-auto px-4 relative z-10">
-        {/* Título com estilo completamente diferente - Centralizado com ícone grande */}
         <div className="relative mb-16">
           <div className="absolute left-1/2 top-0 -translate-x-1/2 -translate-y-1/2">
             <div className="w-16 h-16 rounded-full bg-purple-600/30 flex items-center justify-center shadow-glow">
@@ -88,7 +87,6 @@ export default function TestimonialCarousel() {
 
         <div className="relative h-[400px] md:h-[300px] w-full">
           {testimonials.map((testimonial, index) => {
-            // Determine position classes based on active index
             let positionClasses =
               "absolute top-0 left-0 w-full transition-all duration-700 ease-in-out";
 

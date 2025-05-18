@@ -1,4 +1,3 @@
-// controller/aiController.js
 import axios from "axios";
 import { Transaction } from "../models/Transaction.js";
 import { Goal } from "../models/Goal.js";
@@ -17,7 +16,7 @@ export const getInsightFromAI = async (req, res) => {
     const [transactions, goals, userData] = await Promise.all([
       Transaction.find({ user: userId }),
       Goal.find({ user: userId }),
-      User.findOne({ _id: userId }), // 🛠 Corrigido: _id é o campo correto
+      User.findOne({ _id: userId }),
     ]);
 
     // Formatando transações

@@ -114,7 +114,6 @@ export default function useInsightGenerator(transactions, summary) {
       });
     }
 
-    // 2. Category Spending Insights
     const totalExpensesValue = Object.values(expensesByCategory).reduce(
       (sum, value) => sum + value,
       0
@@ -133,7 +132,6 @@ export default function useInsightGenerator(transactions, summary) {
           { label: "Definir limite", icon: Target },
         ];
 
-        // Special case for housing
         if (category === "moradia" && percentage > 40) {
           color = "red";
           details =

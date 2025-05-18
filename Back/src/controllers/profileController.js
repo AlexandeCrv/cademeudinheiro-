@@ -92,9 +92,25 @@ export const getFullProfile = async (req, res) => {
       gender: user.gender,
       bio: user.bio,
       phone: user.phone,
+      role: user.role,
     });
   } catch (err) {
     console.error("Erro ao buscar perfil:", err);
     res.status(500).json({ message: "Erro ao buscar perfil" });
+  }
+};
+export const getAllUsers = async (req, res) => {
+  try {
+    if (req.user.role !== "admin") {
+      return res.status(403).json({
+        message: "Acesso negado: apenas administradores podem ver todos os usuários.",
+      });
+    }
+
+    const users = await User.find().select("-password");
+    res.status(200).json(users);
+  } catch (err) {
+    console.error("Erro ao buscar todos os usuários:", err);
+    res.status(500).json({ message: "Erro ao buscar todos os usuários" });
   }
 };

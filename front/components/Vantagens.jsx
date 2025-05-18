@@ -5,25 +5,23 @@ import {
   ChevronRight,
   LineChart,
   Wallet,
+  ArrowRightCircle,
 } from "lucide-react";
 import TestimonialCarousel from "./testimonial-carousel";
 export default function FeaturesSection() {
   return (
     <div id="vantagens" className="relative py-10 pb-32 overflow-x-clip ">
-      {/* Background Elements */}
       <div className="absolute inset-0 z-0">
         <div className="absolute top-0 right-0 w-full h-full bg-gradient-to-b from-gray-950 to-gray-900"></div>
         <div className="absolute -top-40 -right-40 w-96 h-96 bg-purple-900/20 rounded-full filter blur-3xl"></div>
         <div className="absolute -bottom-20 -left-20 w-96 h-96 bg-violet-900/20 rounded-full filter blur-3xl"></div>
 
-        {/* Grid Pattern */}
         <div className="absolute inset-0 opacity-5">
           <div className="h-full w-full bg-[linear-gradient(to_right,#8B5CF6_1px,transparent_1px),linear-gradient(to_bottom,#8B5CF6_1px,transparent_1px)] bg-[size:4rem_4rem]"></div>
         </div>
       </div>
 
       <div className="container mx-auto px-4 relative z-10">
-        {/* Section Header */}
         <div className="max-w-3xl mx-auto text-center mb-16">
           <div className="inline-flex items-center justify-center gap-2 bg-purple-900/30 px-4 py-2 rounded-full mb-4">
             <Shield className="h-5 w-5 text-purple-400" />
@@ -46,7 +44,6 @@ export default function FeaturesSection() {
           </p>
         </div>
 
-        {/* Main Feature */}
         <div className="bg-gradient-to-br from-gray-900 to-gray-800 rounded-2xl border border-purple-900/50 p-8 mb-12 shadow-glow">
           <div className="flex flex-col md:flex-row items-center gap-8">
             <div className="md:w-1/2">
@@ -71,9 +68,14 @@ export default function FeaturesSection() {
                   "Previsões financeiras baseadas no seu histórico",
                   "Alertas de gastos excessivos",
                 ].map((item, index) => (
-                  <li key={index} className="flex items-start gap-2">
-                    <ChevronRight className="h-5 w-5 text-purple-400 mt-0.5 flex-shrink-0" />
-                    <span className="text-gray-300">{item}</span>
+                  <li
+                    key={index}
+                    className="flex items-start gap-2 group hover:pl-1 transition-all duration-200"
+                  >
+                    <ChevronRight className="h-5 w-5 text-purple-400 mt-0.5 flex-shrink-0 transform transition-transform duration-300 group-hover:rotate-90" />
+                    <span className="text-gray-300 group-hover:text-white transition-colors duration-300">
+                      {item}
+                    </span>
                   </li>
                 ))}
               </ul>
@@ -131,13 +133,13 @@ export default function FeaturesSection() {
                 te ajudar, a CMD te mostra previsões valiosas das suas finanças.
               </p>
 
-              <div className="mt-6 pt-4 border-t border-gray-800">
+              <div className="mt-12 pt-4 border-t border-gray-800">
                 <a
-                  href="#"
-                  className="inline-flex items-center text-purple-400 hover:text-purple-300 transition-colors"
+                  href="/login"
+                  className="inline-flex items-center gap-2 text-purple-400 hover:text-purple-300 transition-all duration-300 hover:translate-x-1"
                 >
-                  <span className="mr-2">Saiba mais</span>
-                  <ChevronRight className="h-4 w-4" />
+                  <span>Confira por conta própria</span>
+                  <ArrowRightCircle className="h-5 w-5" />
                 </a>
               </div>
             </div>
@@ -160,11 +162,11 @@ export default function FeaturesSection() {
 
               <div className="mt-6 pt-4 border-t border-gray-800">
                 <a
-                  href="#"
-                  className="inline-flex items-center text-purple-400 hover:text-purple-300 transition-colors"
+                  href="/login"
+                  className="inline-flex items-center gap-2 text-purple-400 hover:text-purple-300 transition-all duration-300 hover:translate-x-1"
                 >
-                  <span className="mr-2">Saiba mais</span>
-                  <ChevronRight className="h-4 w-4" />
+                  <span>Entre e descubra</span>
+                  <ArrowRightCircle className="h-5 w-5" />
                 </a>
               </div>
             </div>
@@ -187,11 +189,11 @@ export default function FeaturesSection() {
 
               <div className="mt-6 pt-4 border-t border-gray-800">
                 <a
-                  href="#"
-                  className="inline-flex items-center text-purple-400 hover:text-purple-300 transition-colors"
+                  href="/login"
+                  className="inline-flex items-center gap-2 text-purple-400 hover:text-purple-300 transition-all duration-300 hover:translate-x-1"
                 >
-                  <span className="mr-2">Saiba mais</span>
-                  <ChevronRight className="h-4 w-4" />
+                  <span>Veja no app</span>
+                  <ArrowRightCircle className="h-5 w-5" />
                 </a>
               </div>
             </div>

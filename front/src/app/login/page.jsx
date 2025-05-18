@@ -19,7 +19,6 @@ export default function LoginPage() {
         </div>
       </div>
 
-      {/* Botão de voltar */}
       <div
         className="absolute top-6 left-6 cursor-pointer text-purple-400 hover:text-purple-300 z-10"
         onClick={() => router.push("/")}
@@ -27,7 +26,6 @@ export default function LoginPage() {
         <ArrowLeft size={28} />
       </div>
 
-      {/* Card de login */}
       <div className="max-w-md w-full bg-gray-900 border border-purple-900/50 p-8 rounded-2xl shadow-glow z-10">
         <h2 className="text-center text-3xl font-bold text-white mb-2">
           Entrar na conta

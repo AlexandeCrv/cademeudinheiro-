@@ -15,14 +15,11 @@ export function NotificationSystem({ token }) {
   const [unreadCount, setUnreadCount] = useState(0);
   const [isOpen, setIsOpen] = useState(false);
 
-  // Fetch notifications
   useEffect(() => {
     if (!token) return;
 
-    // This would be replaced with an actual API call in production
     const fetchNotifications = async () => {
       try {
-        // Simulating API response with mock data
         const mockNotifications = [
           {
             id: "1",
@@ -61,13 +58,11 @@ export function NotificationSystem({ token }) {
 
     fetchNotifications();
 
-    // Set up polling for new notifications
     const interval = setInterval(fetchNotifications, 60000); // Check every minute
 
     return () => clearInterval(interval);
   }, [token]);
 
-  // Mark notification as read
   const markAsRead = (id) => {
     setNotifications((prev) =>
       prev.map((notification) =>
@@ -76,8 +71,6 @@ export function NotificationSystem({ token }) {
     );
 
     setUnreadCount((prev) => Math.max(0, prev - 1));
-
-    // In a real app, you would make an API call here to update the read status
   };
 
   // Mark all as read
@@ -87,11 +80,8 @@ export function NotificationSystem({ token }) {
     );
 
     setUnreadCount(0);
-
-    // In a real app, you would make an API call here to update all read statuses
   };
 
-  // Format relative time
   const formatRelativeTime = (dateString) => {
     const date = new Date(dateString);
     const now = new Date();
@@ -111,7 +101,6 @@ export function NotificationSystem({ token }) {
     }
   };
 
-  // Get icon based on notification type
   const getNotificationIcon = (type) => {
     switch (type) {
       case "success":

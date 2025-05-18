@@ -79,11 +79,9 @@ export const getTransactionSummary = async (req, res) => {
   try {
     const transactions = await Transaction.find({ user: req.user._id });
 
-    // Inicializa as variáveis de entradas e saídas
     let entradas = 0;
     let saidas = 0;
 
-    // Percorre todas as transações
     transactions.forEach((t) => {
       if (t.type === "entrada")
         entradas += parseFloat(t.amount); // Garantindo que seja tratado como número

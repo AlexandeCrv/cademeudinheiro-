@@ -1,15 +1,26 @@
 import express from "express";
 import {
   registerUser,
+  logoutUser,
   loginUser,
   getUserProfile,
+  blockUser,
+  unblockUser,
+  deleteUser,
 } from "../controllers/authController.js";
 import { protect } from "../middlewares/authMiddleware.js";
+import { isAdmin } from "../middlewares/isAdmin.js";
 
 const router = express.Router();
 
 router.post("/register", registerUser);
 router.post("/login", loginUser);
-router.get("/me", protect, getUserProfile); // A rota protegida para obter o perfil do usuário
+router.get("/me", protect, getUserProfile);
+router.post("/logout", protect, logoutUser);
+
+// ✅ NOVAS ROTAS DE ADMIN
+router.put("/users/:userId/block", protect, isAdmin, blockUser);
+router.put("/users/:userId/unblock", protect, isAdmin, unblockUser);
+router.delete("/users/:userId", protect, isAdmin, deleteUser);
 
 export default router;

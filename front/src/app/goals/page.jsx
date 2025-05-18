@@ -54,7 +54,6 @@ export default function GoalsPage() {
         <div className="absolute -top-40 -right-40 w-96 h-96 bg-purple-900/20 rounded-full filter blur-3xl"></div>
         <div className="absolute -bottom-20 -left-20 w-96 h-96 bg-violet-900/20 rounded-full filter blur-3xl"></div>
 
-        {/* Grid Pattern */}
         <div className="absolute inset-0 opacity-5">
           <div className="h-full w-full bg-[linear-gradient(to_right,#8B5CF6_1px,transparent_1px),linear-gradient(to_bottom,#8B5CF6_1px,transparent_1px)] bg-[size:4rem_4rem]"></div>
         </div>
@@ -82,7 +81,6 @@ export default function GoalsPage() {
           </button>
         </motion.header>
 
-        {/* Celebração quando uma meta é atingida */}
         {showCelebration && (
           <div className="fixed inset-0 flex items-center justify-center z-50 pointer-events-none">
             <div className="bg-gradient-to-r from-purple-600/20 to-violet-600/20 rounded-2xl p-8 text-center animate-bounce">
@@ -122,7 +120,6 @@ export default function GoalsPage() {
           </div>
         ) : (
           <>
-            {/* Resumo */}
             <motion.header
               initial={{ opacity: 0, y: -20 }}
               animate={{ opacity: 1, y: 0 }}
@@ -238,7 +235,6 @@ export default function GoalsPage() {
               </div>
             </motion.header>
 
-            {/* Lista de Metas */}
             <motion.header
               initial={{ opacity: 0, y: -20 }}
               animate={{ opacity: 1, y: 0 }}
@@ -353,7 +349,6 @@ export default function GoalsPage() {
                             ))}
                           </div>
 
-                          {/* Campo personalizado com formatação */}
                           <form
                             onSubmit={(e) => {
                               e.preventDefault();
@@ -410,7 +405,6 @@ export default function GoalsPage() {
           </>
         )}
 
-        {/* Modal de Nova Meta */}
         {isModalOpen && (
           <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm animate-fadeIn">
             <div className="relative w-full max-w-md">

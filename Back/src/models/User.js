@@ -34,9 +34,18 @@ const UserSchema = new mongoose.Schema(
       type: String,
       default: "",
     },
-    birthDate: {
-      type: Date,
-      default: null,
+    role: {
+      type: String,
+      enum: ["user", "admin"],
+      default: "user",
+    },
+    isOnline: {
+      type: Boolean,
+      default: false,
+    },
+    isBlocked: {
+      type: Boolean,
+      default: false,
     },
   },
   {
@@ -44,7 +53,6 @@ const UserSchema = new mongoose.Schema(
   }
 );
 
-// Antes de salvar, criptografa a senha
 UserSchema.pre("save", async function (next) {
   if (!this.isModified("password")) return next();
   const salt = await bcrypt.genSalt(10);

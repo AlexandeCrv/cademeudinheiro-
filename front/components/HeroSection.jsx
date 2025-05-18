@@ -56,7 +56,7 @@ export default function HeroSection() {
           <Image
             height={500}
             width={500}
-            src="/imgHero4.png"
+            src="/imgHero5.png"
             alt="herosection"
             className=" w-[600px]  md:rounded-3xl shadow-lg "
           />

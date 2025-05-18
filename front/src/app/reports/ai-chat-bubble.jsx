@@ -13,14 +13,12 @@ export default function AIChatBubble({ onSendPrompt }) {
   const chatContainerRef = useRef(null);
   const inputRef = useRef(null);
 
-  // Scroll to bottom of chat when new messages are added
   useEffect(() => {
     if (chatContainerRef.current) {
       chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
     }
   }, [chatHistory]);
 
-  // Focus input when chat is opened
   useEffect(() => {
     if (isOpen && inputRef.current) {
       setTimeout(() => {
@@ -32,15 +30,12 @@ export default function AIChatBubble({ onSendPrompt }) {
   const handleSendPrompt = async () => {
     if (!prompt.trim() || isLoading) return;
 
-    // Add user message to chat
     setChatHistory((prev) => [...prev, { role: "user", content: prompt }]);
 
     setIsLoading(true);
     try {
-      // Send prompt to AI
       const response = await onSendPrompt(prompt);
 
-      // Add AI response to chat
       setChatHistory((prev) => [...prev, { role: "assistant", content: response }]);
     } catch (error) {
       setChatHistory((prev) => [
@@ -65,7 +60,6 @@ export default function AIChatBubble({ onSendPrompt }) {
 
   return (
     <>
-      {/* Chat Bubble */}
       <motion.button
         className={`fixed bottom-6 right-6 z-50 flex items-center justify-center w-14 h-14 rounded-full shadow-lg ${
           isOpen ? "bg-purple-700" : "bg-purple-600 hover:bg-purple-700"
@@ -82,7 +76,6 @@ export default function AIChatBubble({ onSendPrompt }) {
         )}
       </motion.button>
 
-      {/* Chat Panel */}
       <AnimatePresence>
         {isOpen && (
           <motion.div
@@ -92,7 +85,6 @@ export default function AIChatBubble({ onSendPrompt }) {
             exit={{ opacity: 0, y: 20, scale: 0.9 }}
             transition={{ type: "spring", damping: 25, stiffness: 300 }}
           >
-            {/* Chat Header */}
             <div className="bg-gray-800 p-4 border-b border-purple-900/30">
               <h3 className="text-lg font-semibold text-purple-300">
                 Assistente Financeiro
@@ -102,7 +94,6 @@ export default function AIChatBubble({ onSendPrompt }) {
               </p>
             </div>
 
-            {/* Chat Messages */}
             <div
               ref={chatContainerRef}
               className="p-4 h-80 overflow-y-auto space-y-4 scrollbar-thin scrollbar-thumb-gray-700 scrollbar-track-gray-900"
@@ -158,7 +149,6 @@ export default function AIChatBubble({ onSendPrompt }) {
               )}
             </div>
 
-            {/* Chat Input */}
             <div className="p-4 border-t border-purple-900/30 bg-gray-800">
               <div className="flex items-end gap-2">
                 <textarea

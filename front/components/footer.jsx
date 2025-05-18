@@ -165,7 +165,6 @@ export default function Footer() {
           </div>
         </div>
 
-        {/* Social Media & Copyright */}
         <div className="border-t border-gray-800 pt-8 flex flex-col md:flex-row justify-between items-center">
           <div className="flex items-center gap-6 mb-4 md:mb-0">
             <Link

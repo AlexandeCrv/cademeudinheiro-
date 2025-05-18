@@ -76,7 +76,6 @@ export default function useCategories() {
   };
 
   const processCategoryData = () => {
-    // Filtrar transações por período
     let filteredTransactions = [...transactions];
     console.log("Processando categorias com", filteredTransactions.length, "transações"); // Debug
 
@@ -104,23 +103,20 @@ export default function useCategories() {
       });
     }
 
-    // Filtrar por tipo (entrada/saída)
     if (categoryType !== "all") {
       filteredTransactions = filteredTransactions.filter((t) => t.type === categoryType);
     }
 
     console.log("Transações filtradas:", filteredTransactions); // Debug
 
-    // Agrupar transações por categoria
     const categoryGroups = {};
 
     filteredTransactions.forEach((transaction) => {
       const category = transaction.category || "outros";
-      // Converter o valor para número se for string
+
       let amount = 0;
 
       if (typeof transaction.amount === "string") {
-        // Remove caracteres não numéricos e converte para número
         amount = Number.parseFloat(transaction.amount.replace(/[^\d.-]/g, ""));
       } else if (typeof transaction.amount === "number") {
         amount = transaction.amount;
@@ -143,9 +139,8 @@ export default function useCategories() {
       categoryGroups[category].count += 1;
     });
 
-    console.log("Grupos de categorias:", categoryGroups); // Debug
+    console.log("Grupos de categorias:", categoryGroups);
 
-    // Converter para array e calcular porcentagens
     const total = Object.values(categoryGroups).reduce((sum, cat) => sum + cat.amount, 0);
 
     const categoryArray = Object.values(categoryGroups).map((cat, index) => ({
@@ -154,11 +149,10 @@ export default function useCategories() {
       color: categoryColors[index % categoryColors.length],
     }));
 
-    // Ordenar por valor (do maior para o menor)
     categoryArray.sort((a, b) => b.amount - a.amount);
 
-    console.log("Array de categorias processado:", categoryArray); // Debug
-    console.log("Total:", total); // Debug
+    console.log("Array de categorias processado:", categoryArray);
+    console.log("Total:", total);
 
     setCategoryData(categoryArray);
     setTotalAmount(total);
@@ -166,7 +160,6 @@ export default function useCategories() {
 
   const getCategoryName = (categoryId) => {
     const categoryMap = {
-      // Entradas
       salario: "Salário",
       investimentos: "Investimentos",
       emprestimos: "Empréstimos",

@@ -35,7 +35,6 @@ export default function RegisterPage() {
         return;
       }
 
-      // ✅ Registro bem-sucedido, redireciona para login
       router.push("/login");
     } catch (err) {
       setError("Erro ao conectar com o servidor.");
@@ -44,7 +43,6 @@ export default function RegisterPage() {
   };
   return (
     <main className="min-h-screen flex items-center justify-center px-4 relative overflow-hidden bg-gradient-to-b from-gray-950 to-gray-900">
-      {/* Fundo */}
       <div className="absolute inset-0 z-0">
         <div className="absolute top-0 right-0 w-full h-full bg-gradient-to-b from-gray-950 to-gray-900"></div>
         <div className="absolute -top-40 -right-40 w-96 h-96 bg-purple-900/20 rounded-full filter blur-3xl"></div>
@@ -54,7 +52,6 @@ export default function RegisterPage() {
         </div>
       </div>
 
-      {/* Botão voltar */}
       <div
         className="absolute top-6 left-6 cursor-pointer text-purple-400 hover:text-purple-300 z-10"
         onClick={() => router.push("/")}
@@ -62,7 +59,6 @@ export default function RegisterPage() {
         <ArrowLeft size={28} />
       </div>
 
-      {/* Card */}
       <div className="max-w-md w-full bg-gray-900 border border-purple-900/50 p-8 rounded-2xl shadow-glow z-10">
         <h2 className="text-center text-3xl font-bold text-white mb-2">
           Criar nova conta

@@ -10,18 +10,21 @@ import {
   Target,
   LogOut,
   Library,
+  Shield,
 } from "lucide-react";
 import Image from "next/image";
-export default function Sidebar({ onLogout }) {
-  const pathname = usePathname();
 
+export default function Sidebar({ onLogout, userName, role }) {
+  const pathname = usePathname();
   const menuItems = [
     { name: "Dashboard", path: "/dashboard", icon: BarChart3 },
     { name: "Transações", path: "/transactions", icon: Wallet },
     { name: "Categorias", path: "/categories", icon: PieChart },
     { name: "Relatórios", path: "/reports", icon: Library },
-
     { name: "Metas", path: "/goals", icon: Target },
+
+    // Rota só para admin
+    { name: "Admin Panel", path: "/admin", icon: Shield, role: "admin" },
   ];
 
   return (
@@ -32,6 +35,11 @@ export default function Sidebar({ onLogout }) {
 
       <nav className="flex flex-col items-center md:items-start w-full">
         {menuItems.map((item) => {
+          // Se a rota tem role e o usuário não é admin, não mostrar
+          if (item.role === "admin" && role !== "admin") {
+            return null;
+          }
+
           const isActive = pathname === item.path;
           return (
             <Link
