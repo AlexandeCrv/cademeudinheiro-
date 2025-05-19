@@ -55,6 +55,7 @@ export const createAdmin = async (req, res) => {
 
     res.status(201).json({ message: "Admin criado com sucesso", adminUser });
   } catch (error) {
-    res.status(500).json({ message: "Erro ao criar admin", error });
+    console.error("❌ Erro no createAdmin:", error);
+    res.status(500).json({ message: "Erro ao criar admin" });
   }
 };
