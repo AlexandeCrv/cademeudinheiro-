@@ -12,7 +12,9 @@ export const registerUser = async (req, res) => {
     const userExists = await User.findOne({ email });
     if (userExists) return res.status(400).json({ message: "Email já cadastrado" });
 
+    // Hash da senha antes de salvar
     const hashedPassword = await bcrypt.hash(password, 10);
+
     const newUser = new User({ name, email, password: hashedPassword });
     await newUser.save();
 
@@ -34,25 +36,13 @@ export const registerUser = async (req, res) => {
 
 export const loginUser = async (req, res) => {
   const { email, password } = req.body;
-
   try {
     const user = await User.findOne({ email });
     if (!user) return res.status(400).json({ message: "Usuário não encontrado" });
-
-    if (user.isBlocked) {
-      return res
-        .status(403)
-        .json({ message: "Conta bloqueada. Contate o administrador." });
-    }
-
-    // 🔍 Adicionando logs ANTES da comparação
-    console.log("Senha recebida:", password);
-    console.log("Senha salva (hash):", user.password);
+    console.log("User found:", user.email, user.password);
 
     const isMatch = await bcrypt.compare(password, user.password);
-
-    // 🔍 Verificando resultado do bcrypt
-    console.log("Senha bateu?", isMatch);
+    console.log("Password match?", isMatch);
 
     if (!isMatch) return res.status(400).json({ message: "Senha incorreta" });
 
@@ -72,8 +62,8 @@ export const loginUser = async (req, res) => {
       token,
     });
   } catch (err) {
-    console.error(err);
     res.status(500).json({ message: "Erro ao fazer login" });
+    console.error(err);
   }
 };
 
