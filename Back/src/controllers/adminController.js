@@ -1,7 +1,6 @@
 import { User } from "../models/User.js";
 import { Transaction } from "../models/Transaction.js";
 import { Goal } from "../models/Goal.js";
-import bcrypt from "bcrypt";
 
 export const getAdminOverview = async (req, res) => {
   try {
@@ -25,37 +24,5 @@ export const getAdminOverview = async (req, res) => {
     });
   } catch (error) {
     res.status(500).json({ message: "Erro ao buscar dados administrativos" });
-  }
-};
-export const createAdmin = async (req, res) => {
-  const { name, email, password, secret } = req.body;
-
-  // Verifica se o segredo bate com o que está no .env para proteger esse endpoint
-  if (secret !== process.env.CREATE_ADMIN_SECRET) {
-    return res.status(403).json({ message: "Acesso negado" });
-  }
-
-  try {
-    // Verifica se já existe usuário com esse email
-    const existingUser = await User.findOne({ email });
-    if (existingUser) return res.status(400).json({ message: "Usuário já existe" });
-
-    // Cria hash da senha
-    const hashedPassword = await bcrypt.hash(password, 10);
-
-    // Cria o usuário admin
-    const adminUser = new User({
-      name,
-      email,
-      password: hashedPassword,
-      role: "admin", // define o role admin
-    });
-
-    await adminUser.save();
-
-    res.status(201).json({ message: "Admin criado com sucesso", adminUser });
-  } catch (error) {
-    console.error("❌ Erro no createAdmin:", error);
-    res.status(500).json({ message: "Erro ao criar admin" });
   }
 };
