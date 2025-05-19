@@ -50,6 +50,6 @@ app.get("/online-users", protect, isAdmin, (req, res) => {
 // Conecta ao banco e inicia servidor
 connectDatabase().then(() => {
   app.listen(3001, () => {
-    console.log("✅ Servidor rodando em http://localhost:3001");
+    console.log("✅ Servidor rodando em http://localhost:3001 espero");
   });
 });
