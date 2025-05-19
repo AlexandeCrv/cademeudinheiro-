@@ -1,6 +1,7 @@
 import { User } from "../models/User.js";
 import { Transaction } from "../models/Transaction.js";
 import { Goal } from "../models/Goal.js";
+import bcrypt from "bcrypt";
 
 export const getAdminOverview = async (req, res) => {
   try {
