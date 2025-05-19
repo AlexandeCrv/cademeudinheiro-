@@ -51,6 +51,8 @@ export default function AdminDashboard() {
   const { toast } = useToast();
   const router = useRouter();
 
+  const BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
+
   useEffect(() => {
     const checkAuthStatus = async () => {
       try {
@@ -60,7 +62,7 @@ export default function AdminDashboard() {
           return;
         }
 
-        const response = await fetch("http://localhost:3001/auth/me", {
+        const response = await fetch(`${BASE_URL}/auth/me`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -72,7 +74,6 @@ export default function AdminDashboard() {
 
         const data = await response.json();
 
-        // Salvar o nome e a role do usuário
         if (data.currentUser) {
           setUserName(data.currentUser.name || "Usuário");
           setUserRole(data.currentUser.role || "");
@@ -92,12 +93,12 @@ export default function AdminDashboard() {
         }
 
         const [overviewResponse, meResponse] = await Promise.all([
-          fetch("http://localhost:3001/admin/overview", {
+          fetch(`${BASE_URL}/admin/overview`, {
             headers: {
               Authorization: `Bearer ${token}`,
             },
           }),
-          fetch("http://localhost:3001/auth/me", {
+          fetch(`${BASE_URL}/auth/me`, {
             headers: {
               Authorization: `Bearer ${token}`,
             },
@@ -111,7 +112,6 @@ export default function AdminDashboard() {
         const overviewData = await overviewResponse.json();
         const currentUser = await meResponse.json();
 
-        // Filtra: remove admins e o usuário logado
         const filteredUsers = overviewData.users.filter(
           (user) => user._id !== currentUser._id && user.role !== "admin"
         );
@@ -136,7 +136,7 @@ export default function AdminDashboard() {
 
   const handleLogout = async () => {
     try {
-      await fetch("http://localhost:3001/auth/logout", {
+      await fetch(`${BASE_URL}/auth/logout`, {
         method: "POST",
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -157,8 +157,8 @@ export default function AdminDashboard() {
     if (!token) return;
 
     const url = isBlocked
-      ? `http://localhost:3001/auth/users/${userId}/unblock`
-      : `http://localhost:3001/auth/users/${userId}/block`;
+      ? `${BASE_URL}/auth/users/${userId}/unblock`
+      : `${BASE_URL}/auth/users/${userId}/block`;
 
     const response = await fetch(url, {
       method: "PUT",
@@ -191,7 +191,7 @@ export default function AdminDashboard() {
     const token = localStorage.getItem("token");
     if (!token) return;
 
-    const response = await fetch(`http://localhost:3001/auth/users/${userToDelete._id}`, {
+    const response = await fetch(`${BASE_URL}/auth/users/${userToDelete._id}`, {
       method: "DELETE",
       headers: {
         Authorization: `Bearer ${token}`,

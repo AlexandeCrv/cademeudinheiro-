@@ -3,6 +3,8 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 
+const BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
+
 export function useLogin() {
   const router = useRouter();
   const [email, setEmail] = useState("");
@@ -14,7 +16,7 @@ export function useLogin() {
     setError("");
 
     try {
-      const res = await fetch("http://localhost:3001/auth/login", {
+      const res = await fetch(`${BASE_URL}/auth/login`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -41,7 +43,7 @@ export function useLogin() {
     const token = localStorage.getItem("token");
 
     if (token) {
-      fetch("http://localhost:3001/auth/me", {
+      fetch(`${BASE_URL}/auth/me`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },

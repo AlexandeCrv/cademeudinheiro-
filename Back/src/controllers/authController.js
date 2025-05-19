@@ -23,7 +23,6 @@ export const registerUser = async (req, res) => {
         email,
         profilePhoto: newUser.profilePhoto,
         gender: newUser.gender,
-        birthDate: newUser.birthDate,
       },
       token,
     });

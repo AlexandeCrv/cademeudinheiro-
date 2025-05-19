@@ -28,16 +28,16 @@ export function useTransactions(token, handleLogout) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [userName, setUserName] = useState("");
-
+  const BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
   const fetchData = async () => {
     if (!token) return;
     setLoading(true);
     try {
       const [transactionsRes, userRes] = await Promise.all([
-        fetch("http://localhost:3001/transactions", {
+        fetch(`${BASE_URL}/transactions`, {
           headers: { Authorization: `Bearer ${token}` },
         }),
-        fetch("http://localhost:3001/auth/me", {
+        fetch(`${BASE_URL}/auth/me`, {
           headers: { Authorization: `Bearer ${token}` },
         }),
       ]);
@@ -81,13 +81,10 @@ export function useTransactions(token, handleLogout) {
   };
   const handleDelete = async (transactionId) => {
     try {
-      const response = await fetch(
-        `http://localhost:3001/transactions/${transactionId}`,
-        {
-          method: "DELETE",
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      );
+      const response = await fetch(`${BASE_URL}/transactions/${transactionId}`, {
+        method: "DELETE",
+        headers: { Authorization: `Bearer ${token}` },
+      });
 
       if (response.ok) {
         setTransactions(
@@ -103,9 +100,10 @@ export function useTransactions(token, handleLogout) {
       setError("Erro ao deletar transação.");
     }
   };
+
   useEffect(() => {
     fetchData();
-  }, [token]); // Adicionei `token` na dependência do useEffect
+  }, [token]);
 
   return {
     transactions,

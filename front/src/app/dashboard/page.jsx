@@ -43,6 +43,7 @@ export default function Dashboard() {
 
   const token = typeof window !== "undefined" ? localStorage.getItem("token") : null;
 
+  const BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
   const resetForm = () => {
     setTitle("");
     setAmount("");
@@ -108,10 +109,7 @@ export default function Dashboard() {
     setIsSubmitting(true);
     setError("");
 
-    // Convertendo valor formatado ("R$ 1.234,56") para número decimal (1234.56)
-    // Garante que amount seja tratado como string antes de usar replace
-    const amountString = String(amount);
-    const numericValue = Number.parseFloat(amountString.replace(/\D/g, "")) / 100;
+    const numericValue = Number.parseFloat(String(amount).replace(/\D/g, "")) / 100;
 
     const transactionData = {
       title,
@@ -122,18 +120,15 @@ export default function Dashboard() {
       createdAt: selectedDate,
     };
 
+    const isEditing = transactionToEdit !== null;
+    const url = isEditing
+      ? `${BASE_URL}/transactions/${transactionToEdit._id}`
+      : `${BASE_URL}/transactions`;
+    const method = isEditing ? "PUT" : "POST";
+
     try {
-      // Verifica se está editando uma transação existente ou criando uma nova
-      const isEditing = transactionToEdit !== null;
-
-      const url = isEditing
-        ? `http://localhost:3001/transactions/${transactionToEdit._id}`
-        : "http://localhost:3001/transactions";
-
-      const method = isEditing ? "PUT" : "POST";
-
       const res = await fetch(url, {
-        method: method,
+        method,
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
@@ -141,8 +136,9 @@ export default function Dashboard() {
         body: JSON.stringify(transactionData),
       });
 
-      if (!res.ok)
+      if (!res.ok) {
         throw new Error(`Erro ao ${isEditing ? "atualizar" : "criar"} transação`);
+      }
 
       setShowSuccess(true);
       setTimeout(() => {
@@ -151,8 +147,9 @@ export default function Dashboard() {
         fetchData();
       }, 1500);
     } catch (err) {
-      setError(`Erro ao ${transactionToEdit ? "atualizar" : "adicionar"} transação`);
+      setError(`Erro ao ${isEditing ? "atualizar" : "adicionar"} transação`);
       console.error(err);
+    } finally {
       setIsSubmitting(false);
     }
   };
@@ -217,31 +214,33 @@ export default function Dashboard() {
   const fetchData = async () => {
     setLoading(true);
     try {
-      const [transactionsRes, resumoRes, profileRes] = await Promise.all([
-        fetch("http://localhost:3001/transactions", {
-          headers: { Authorization: `Bearer ${token}` },
-        }),
-        fetch("http://localhost:3001/transactions/summary", {
-          headers: { Authorization: `Bearer ${token}` },
-        }),
-        fetch("http://localhost:3001/profile", {
-          headers: { Authorization: `Bearer ${token}` },
-        }),
+      const endpoints = [
+        `${BASE_URL}/transactions`,
+        `${BASE_URL}/transactions/summary`,
+        `${BASE_URL}/profile`,
+      ];
+
+      const [transactionsRes, summaryRes, profileRes] = await Promise.all(
+        endpoints.map((url) =>
+          fetch(url, { headers: { Authorization: `Bearer ${token}` } })
+        )
+      );
+
+      const [transactions, summary, profile] = await Promise.all([
+        transactionsRes.json(),
+        summaryRes.json(),
+        profileRes.json(),
       ]);
 
-      const transData = await transactionsRes.json();
-      const resumoData = await resumoRes.json();
-      const profileData = await profileRes.json();
-
-      setRole(profileData.role);
-
-      setTransactions(transData);
-      setFilteredTransactions(transData);
-      setResumo(resumoData);
-      setUserName(profileData.name || "Usuário");
-      setUserProfile(profileData);
+      setTransactions(transactions);
+      setFilteredTransactions(transactions);
+      setResumo(summary);
+      setUserName(profile.name || "Usuário");
+      setUserProfile(profile);
+      setRole(profile.role);
     } catch (err) {
       setError("Erro ao carregar dados.");
+      console.error(err);
     } finally {
       setLoading(false);
     }
@@ -259,7 +258,7 @@ export default function Dashboard() {
 
   const handleLogout = async () => {
     try {
-      await fetch("http://localhost:3001/auth/logout", {
+      await fetch(`${BASE_URL}/auth/logout`, {
         method: "POST",
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -268,18 +267,21 @@ export default function Dashboard() {
       });
     } catch (error) {
       console.error("Erro ao deslogar:", error);
+    } finally {
+      localStorage.removeItem("token");
+      router.push("/login");
     }
-
-    localStorage.removeItem("token");
-    router.push("/login");
   };
 
   const handleDelete = async (id) => {
     try {
-      await fetch(`http://localhost:3001/transactions/${id}`, {
+      const res = await fetch(`${BASE_URL}/transactions/${id}`, {
         method: "DELETE",
         headers: { Authorization: `Bearer ${token}` },
       });
+
+      if (!res.ok) throw new Error("Erro ao deletar transação");
+
       fetchData();
     } catch (err) {
       setError("Erro ao deletar transação");
@@ -350,7 +352,7 @@ export default function Dashboard() {
                 <div className="w-8 h-8 rounded-full bg-purple-600/30 flex items-center justify-center overflow-hidden">
                   {userProfile?.profilePhoto ? (
                     <img
-                      src={`http://localhost:3001${userProfile.profilePhoto}`}
+                      src={`${BASE_URL}${userProfile.profilePhoto}`}
                       alt={userName}
                       className="w-full h-full object-cover"
                     />

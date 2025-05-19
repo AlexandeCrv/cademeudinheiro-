@@ -190,13 +190,14 @@ export default function ResumoCards({ resumo, openTransactionModal, token }) {
       .map(() => Math.random() * 40),
   });
   const [activeTab, setActiveTab] = useState("transacoes");
+  const BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
   useEffect(() => {
     if (!token) return; // evita rodar enquanto o token não estiver pronto
 
     async function fetchMarketData() {
       try {
-        const res = await fetch("http://localhost:3001/api/finances", {
+        const res = await fetch(`${BASE_URL}/api/finances`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },

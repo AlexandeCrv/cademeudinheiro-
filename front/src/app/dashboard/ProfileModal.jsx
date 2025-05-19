@@ -14,6 +14,8 @@ export default function ProfileModal({ isOpen, onClose, userData, onUpdate }) {
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
 
+  const BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
+
   useEffect(() => {
     if (userData) {
       setName(userData.name || "");
@@ -22,7 +24,7 @@ export default function ProfileModal({ isOpen, onClose, userData, onUpdate }) {
       setPhone(userData.phone || "");
 
       if (userData.profilePhoto) {
-        setPhotoPreview(`http://localhost:3001${userData.profilePhoto}`);
+        setPhotoPreview(`${BASE_URL}${userData.profilePhoto}`);
       }
     }
   }, [userData]);
@@ -48,8 +50,7 @@ export default function ProfileModal({ isOpen, onClose, userData, onUpdate }) {
     try {
       const token = localStorage.getItem("token");
 
-      // Update profile info
-      const profileRes = await fetch("http://localhost:3001/profile/update", {
+      const profileRes = await fetch(`${BASE_URL}/profile/update`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -67,12 +68,11 @@ export default function ProfileModal({ isOpen, onClose, userData, onUpdate }) {
         throw new Error("Erro ao atualizar informações do perfil");
       }
 
-      // Upload profile photo if selected
       if (profilePhoto) {
         const formData = new FormData();
         formData.append("profilePhoto", profilePhoto);
 
-        const photoRes = await fetch("http://localhost:3001/profile/upload-photo", {
+        const photoRes = await fetch(`${BASE_URL}/profile/upload-photo`, {
           method: "POST",
           headers: {
             Authorization: `Bearer ${token}`,
@@ -85,8 +85,7 @@ export default function ProfileModal({ isOpen, onClose, userData, onUpdate }) {
         }
       }
 
-      // Get updated profile data
-      const updatedProfileRes = await fetch("http://localhost:3001/profile", {
+      const updatedProfileRes = await fetch(`${BASE_URL}/profile`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -97,15 +96,12 @@ export default function ProfileModal({ isOpen, onClose, userData, onUpdate }) {
       }
 
       const updatedProfile = await updatedProfileRes.json();
-
       setSuccess("Perfil atualizado com sucesso!");
 
-      // Notify parent component about the update
       if (onUpdate) {
         onUpdate(updatedProfile);
       }
 
-      // Close modal after a short delay
       setTimeout(() => {
         onClose();
       }, 1500);

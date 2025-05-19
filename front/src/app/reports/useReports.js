@@ -33,7 +33,7 @@ export default function ReportsPage() {
 
   // Use the enhanced insight generator
   const { insights, recommendations } = useInsightGenerator(transactions, summary);
-
+  const BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
   useEffect(() => {
     if (!token) {
       router.push("/login");
@@ -47,13 +47,13 @@ export default function ReportsPage() {
     try {
       // Fetch transactions, profile, and summary data
       const [transactionsRes, profileRes, summaryRes] = await Promise.all([
-        fetch(`http://localhost:3001/transactions?timeframe=${timeframe}`, {
+        fetch(`${BASE_URL}/transactions?timeframe=${timeframe}`, {
           headers: { Authorization: `Bearer ${token}` },
         }),
-        fetch("http://localhost:3001/profile", {
+        fetch(`${BASE_URL}/profile`, {
           headers: { Authorization: `Bearer ${token}` },
         }),
-        fetch("http://localhost:3001/transactions/summary", {
+        fetch(`${BASE_URL}/transactions/summary`, {
           headers: { Authorization: `Bearer ${token}` },
         }),
       ]);

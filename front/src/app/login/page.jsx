@@ -3,7 +3,7 @@
 import { ArrowLeft } from "lucide-react";
 import { useLogin } from "./useLogin";
 import { useRouter } from "next/navigation";
-
+import { PasswordInput } from "./PasswordInput";
 export default function LoginPage() {
   const { email, setEmail, password, setPassword, error, handleSubmit } = useLogin();
 
@@ -47,14 +47,7 @@ export default function LoginPage() {
             onChange={(e) => setEmail(e.target.value)}
             required
           />
-          <input
-            type="password"
-            placeholder="Senha"
-            className="w-full px-4 py-3 bg-gray-800 text-white border border-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
+          <PasswordInput password={password} setPassword={setPassword} />
           <button
             type="submit"
             className="w-full py-3 bg-purple-600 hover:bg-purple-700 text-white font-semibold rounded-md transition"

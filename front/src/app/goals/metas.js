@@ -18,7 +18,7 @@ export default function useMetas() {
   const [deadline, setDeadline] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [displayAmount, setDisplayAmount] = useState("");
-
+  const BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (!token) {
@@ -31,7 +31,7 @@ export default function useMetas() {
 
   const fetchUserData = async (token) => {
     try {
-      const userRes = await fetch("http://localhost:3001/auth/me", {
+      const userRes = await fetch(`${BASE_URL}/auth/me`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       const userData = await userRes.json();
@@ -40,11 +40,10 @@ export default function useMetas() {
       console.error("Erro ao buscar dados do usuário:", err);
     }
   };
-
   const fetchGoals = async (token) => {
     setLoading(true);
     try {
-      const res = await fetch("http://localhost:3001/goals", {
+      const res = await fetch(`${BASE_URL}/goals`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       if (!res.ok) throw new Error("Erro ao buscar metas");
@@ -117,8 +116,8 @@ export default function useMetas() {
 
     try {
       const url = editingGoal
-        ? `http://localhost:3001/goals/${editingGoal.id}`
-        : "http://localhost:3001/goals";
+        ? `${BASE_URL}/goals/${editingGoal.id}`
+        : `${BASE_URL}/goals`;
 
       const method = editingGoal ? "PUT" : "POST";
 
@@ -155,11 +154,10 @@ export default function useMetas() {
       setIsSubmitting(false);
     }
   };
-
   const deleteGoal = async (id) => {
     const token = localStorage.getItem("token");
     try {
-      const res = await fetch(`http://localhost:3001/goals/${id}`, {
+      const res = await fetch(`${BASE_URL}/goals/${id}`, {
         method: "DELETE",
         headers: { Authorization: `Bearer ${token}` },
       });
@@ -170,7 +168,6 @@ export default function useMetas() {
       setError("Não foi possível deletar a meta.");
     }
   };
-
   const updateGoalProgress = async (id, amount) => {
     const token = localStorage.getItem("token");
     const goal = goals.find((g) => g.id === id);
@@ -180,7 +177,7 @@ export default function useMetas() {
     const completed = newAmount >= goal.targetAmount;
 
     try {
-      const res = await fetch(`http://localhost:3001/goals/${id}`, {
+      const res = await fetch(`${BASE_URL}/goals/${id}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -202,7 +199,6 @@ export default function useMetas() {
       setError("Erro ao atualizar progresso");
     }
   };
-
   const calculateDaysRemaining = (deadline) => {
     const today = new Date();
     const deadlineDate = new Date(deadline);

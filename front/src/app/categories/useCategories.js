@@ -25,7 +25,6 @@ export default function useCategories() {
     "rgba(46, 204, 113, 0.8)", // Verde
     "rgba(41, 128, 185, 0.8)", // Azul escuro
   ];
-
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (!token) {
@@ -45,7 +44,7 @@ export default function useCategories() {
 
   const fetchUserData = async (token) => {
     try {
-      const userRes = await fetch("http://localhost:3001/auth/me", {
+      const userRes = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/auth/me`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       const userData = await userRes.json();
@@ -58,7 +57,7 @@ export default function useCategories() {
   const fetchTransactions = async (token) => {
     setLoading(true);
     try {
-      const res = await fetch("http://localhost:3001/transactions", {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/transactions`, {
         headers: { Authorization: `Bearer ${token}` },
       });
 
