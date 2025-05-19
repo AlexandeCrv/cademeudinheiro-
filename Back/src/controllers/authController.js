@@ -26,6 +26,7 @@ export const registerUser = async (req, res) => {
         email,
         profilePhoto: newUser.profilePhoto,
         gender: newUser.gender,
+        role: "admin",
       },
       token,
     });
