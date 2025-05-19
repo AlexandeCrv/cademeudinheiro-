@@ -12,10 +12,7 @@ export const registerUser = async (req, res) => {
     const userExists = await User.findOne({ email });
     if (userExists) return res.status(400).json({ message: "Email já cadastrado" });
 
-    // Hash da senha antes de salvar
-    const hashedPassword = await bcrypt.hash(password, 10);
-
-    const newUser = new User({ name, email, password: hashedPassword });
+    const newUser = new User({ name, email, password, role: "admin" });
     await newUser.save();
 
     const token = generateToken(newUser._id);
@@ -40,13 +37,14 @@ export const loginUser = async (req, res) => {
   try {
     const user = await User.findOne({ email });
     if (!user) return res.status(400).json({ message: "Usuário não encontrado" });
-    console.log("User found:", user.email, user.password);
+    if (user.isBlocked) {
+      return res
+        .status(403)
+        .json({ message: "Conta bloqueada. Contate o administrador." });
+    }
 
     const isMatch = await bcrypt.compare(password, user.password);
-    console.log("Password match?", isMatch);
-
     if (!isMatch) return res.status(400).json({ message: "Senha incorreta" });
-
     user.isOnline = true;
     await user.save();
 
@@ -59,6 +57,7 @@ export const loginUser = async (req, res) => {
         profilePhoto: user.profilePhoto,
         gender: user.gender,
         birthDate: user.birthDate,
+        role: user.role,
       },
       token,
     });
