@@ -1,4 +1,4 @@
-// routes/admin.js
+// routes/isAdmin.routes.js
 import express from "express";
 import { getAdminOverview } from "../controllers/adminController.js";
 import { protect } from "../middlewares/authMiddleware.js";

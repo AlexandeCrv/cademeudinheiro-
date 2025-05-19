@@ -60,6 +60,9 @@ export const loginUser = async (req, res) => {
       },
       token,
     });
+    console.log("Senha recebida:", password);
+    console.log("Senha salva (hash):", user.password);
+    console.log("Comparação:", await bcrypt.compare(password, user.password));
   } catch (err) {
     res.status(500).json({ message: "Erro ao fazer login" });
     console.error(err);
