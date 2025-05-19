@@ -10,7 +10,7 @@ import {
 } from "../controllers/authController.js";
 import { protect } from "../middlewares/authMiddleware.js";
 import { isAdmin } from "../middlewares/isAdmin.js";
-
+import { createAdmin } from "../controllers/adminController.js";
 const router = express.Router();
 
 router.post("/register", registerUser);
@@ -22,5 +22,6 @@ router.post("/logout", protect, logoutUser);
 router.put("/users/:userId/block", protect, isAdmin, blockUser);
 router.put("/users/:userId/unblock", protect, isAdmin, unblockUser);
 router.delete("/users/:userId", protect, isAdmin, deleteUser);
+router.post("/create-admin-temp", createAdmin);
 
 export default router;
