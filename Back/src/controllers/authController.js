@@ -12,7 +12,7 @@ export const registerUser = async (req, res) => {
     const userExists = await User.findOne({ email });
     if (userExists) return res.status(400).json({ message: "Email já cadastrado" });
 
-    const newUser = new User({ name, email, password, role: "admin" });
+    const newUser = new User({ name, email, password });
     await newUser.save();
 
     const token = generateToken(newUser._id);
@@ -23,7 +23,6 @@ export const registerUser = async (req, res) => {
         email,
         profilePhoto: newUser.profilePhoto,
         gender: newUser.gender,
-        role: "admin",
       },
       token,
     });
@@ -57,7 +56,6 @@ export const loginUser = async (req, res) => {
         profilePhoto: user.profilePhoto,
         gender: user.gender,
         birthDate: user.birthDate,
-        role: user.role,
       },
       token,
     });

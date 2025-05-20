@@ -44,15 +44,16 @@ export default function ReportsPage() {
     historicalData,
     forecastData,
     setForecastData,
-
     setHistoricalData,
     fetchData,
   } = useReports();
 
   return (
-    <div className="min-h-screen bg-gray-950 relative text-white overflow-y-clip overflow-x-clip">
-      {/* Sidebar */}
-      <Sidebar onLogout={handleLogout} />
+    <div className="flex min-h-screen justify-between bg-gray-950 relative text-white overflow-hidden">
+      {/* Sidebar - Posicionado de forma absoluta para dispositivos móveis e fixa para telas maiores */}
+      <div className=" w-[70px]">
+        <Sidebar onLogout={handleLogout} />
+      </div>
 
       {/* Background Elements */}
       <div className="absolute inset-0 z-0">
@@ -66,61 +67,28 @@ export default function ReportsPage() {
         </div>
       </div>
 
-      {/* Main Content */}
-      <div className="ml-16 relative z-10 md:ml-64 p-6">
+      {/* Main Content - Usa flex-1 para ocupar o espaço restante e padding-top para dispositivos móveis */}
+      <div className="flex-1 pt-16 sm:pt-0 sm:pl-16 md:pl-64 p-4 sm:p-6 relative z-10 overflow-y-auto">
         {/* Header */}
         <motion.header
-          className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 pb-4 border-b border-purple-900/30"
+          className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 md:mb-8 pb-4 border-b border-purple-900/30"
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
         >
           <div>
-            <h1 className="text-2xl font-bold bg-gradient-to-r from-purple-400 to-violet-300 bg-clip-text text-transparent">
+            <h1 className="text-xl sm:text-2xl font-bold bg-gradient-to-r from-purple-400 to-violet-300 bg-clip-text text-transparent">
               Relatórios Financeiros
             </h1>
-            <p className="text-gray-400">
+            <p className="text-sm sm:text-base text-gray-400">
               Análises e recomendações personalizadas para suas finanças
             </p>
           </div>
 
-          <div className="flex items-center gap-3 mt-4 md:mt-0">
-            <div className="flex items-center gap-2 bg-gray-900 border border-purple-900/50 rounded-lg p-1">
-              <button
-                onClick={() => setTimeframe("month")}
-                className={`px-3 py-1 rounded text-sm ${
-                  timeframe === "month"
-                    ? "bg-purple-600 text-white"
-                    : "text-gray-400 hover:text-purple-400"
-                }`}
-              >
-                Mês Atual
-              </button>
-              <button
-                onClick={() => setTimeframe("quarter")}
-                className={`px-3 py-1 rounded text-sm ${
-                  timeframe === "quarter"
-                    ? "bg-purple-600 text-white"
-                    : "text-gray-400 hover:text-purple-400"
-                }`}
-              >
-                Trimestre
-              </button>
-              <button
-                onClick={() => setTimeframe("year")}
-                className={`px-3 py-1 rounded text-sm ${
-                  timeframe === "year"
-                    ? "bg-purple-600 text-white"
-                    : "text-gray-400 hover:text-purple-400"
-                }`}
-              >
-                Ano
-              </button>
-            </div>
-
+          <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 mt-4 md:mt-0 w-full md:w-auto">
             <button
               onClick={handleExportPDF}
-              className="flex items-center gap-2 px-3 py-2 bg-purple-600 hover:bg-purple-700 rounded-lg text-sm font-medium transition-colors"
+              className="flex items-center gap-2 px-3 py-2 bg-purple-600 hover:bg-purple-700 rounded-lg text-xs sm:text-sm font-medium transition-colors w-full sm:w-auto justify-center sm:justify-start mt-2 sm:mt-0"
             >
               <Download className="h-4 w-4" />
               Exportar PDF
@@ -146,10 +114,10 @@ export default function ReportsPage() {
         ) : (
           <>
             {/* Tabs */}
-            <div className="flex border-b border-purple-900/30 mb-6">
+            <div className="flex overflow-x-auto border-b border-purple-900/30 mb-6 pb-1">
               <button
                 onClick={() => setActiveTab("insights")}
-                className={`px-4 py-2 font-medium text-sm ${
+                className={`px-3 sm:px-4 py-2 font-medium text-xs sm:text-sm whitespace-nowrap ${
                   activeTab === "insights"
                     ? "text-purple-400 border-b-2 border-purple-400"
                     : "text-gray-400 hover:text-purple-300"
@@ -159,7 +127,7 @@ export default function ReportsPage() {
               </button>
               <button
                 onClick={() => setActiveTab("recommendations")}
-                className={`px-4 py-2 font-medium text-sm ${
+                className={`px-3 sm:px-4 py-2 font-medium text-xs sm:text-sm whitespace-nowrap ${
                   activeTab === "recommendations"
                     ? "text-purple-400 border-b-2 border-purple-400"
                     : "text-gray-400 hover:text-purple-300"
@@ -169,7 +137,7 @@ export default function ReportsPage() {
               </button>
               <button
                 onClick={() => setActiveTab("charts")}
-                className={`px-4 py-2 font-medium text-sm ${
+                className={`px-3 sm:px-4 py-2 font-medium text-xs sm:text-sm whitespace-nowrap ${
                   activeTab === "charts"
                     ? "text-purple-400 border-b-2 border-purple-400"
                     : "text-gray-400 hover:text-purple-300"
@@ -179,7 +147,7 @@ export default function ReportsPage() {
               </button>
               <button
                 onClick={() => setActiveTab("forecast")}
-                className={`px-4 py-2 font-medium text-sm ${
+                className={`px-3 sm:px-4 py-2 font-medium text-xs sm:text-sm whitespace-nowrap ${
                   activeTab === "forecast"
                     ? "text-purple-400 border-b-2 border-purple-400"
                     : "text-gray-400 hover:text-purple-300"
@@ -192,7 +160,7 @@ export default function ReportsPage() {
             {/* Tab Content */}
             {activeTab === "insights" && (
               <motion.div
-                className="grid grid-cols-1 md:grid-cols-2 gap-6"
+                className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6"
                 variants={containerVariants}
                 initial="hidden"
                 animate="visible"
@@ -212,12 +180,12 @@ export default function ReportsPage() {
                     </motion.div>
                   ))
                 ) : (
-                  <div className="col-span-2 bg-gray-900/50 border border-purple-900/30 rounded-lg p-6 text-center">
-                    <Info className="h-12 w-12 mx-auto text-gray-500 mb-2" />
-                    <h3 className="text-lg font-medium text-gray-300">
+                  <div className="col-span-1 md:col-span-2 bg-gray-900/50 border border-purple-900/30 rounded-lg p-4 sm:p-6 text-center">
+                    <Info className="h-8 sm:h-12 w-8 sm:w-12 mx-auto text-gray-500 mb-2" />
+                    <h3 className="text-base sm:text-lg font-medium text-gray-300">
                       Sem insights disponíveis
                     </h3>
-                    <p className="text-gray-400 mt-2">
+                    <p className="text-sm text-gray-400 mt-2">
                       Adicione mais transações para que possamos gerar insights
                       personalizados para você.
                     </p>
@@ -228,7 +196,7 @@ export default function ReportsPage() {
 
             {activeTab === "recommendations" && (
               <motion.div
-                className="space-y-6"
+                className="space-y-4 sm:space-y-6"
                 variants={containerVariants}
                 initial="hidden"
                 animate="visible"
@@ -240,12 +208,12 @@ export default function ReportsPage() {
                     </motion.div>
                   ))
                 ) : (
-                  <div className="bg-gray-900/50 border border-purple-900/30 rounded-lg p-6 text-center">
-                    <Lightbulb className="h-12 w-12 mx-auto text-gray-500 mb-2" />
-                    <h3 className="text-lg font-medium text-gray-300">
+                  <div className="bg-gray-900/50 border border-purple-900/30 rounded-lg p-4 sm:p-6 text-center">
+                    <Lightbulb className="h-8 sm:h-12 w-8 sm:w-12 mx-auto text-gray-500 mb-2" />
+                    <h3 className="text-base sm:text-lg font-medium text-gray-300">
                       Sem recomendações disponíveis
                     </h3>
-                    <p className="text-gray-400 mt-2">
+                    <p className="text-sm text-gray-400 mt-2">
                       Adicione mais transações para que possamos gerar recomendações
                       personalizadas para você.
                     </p>
@@ -256,13 +224,13 @@ export default function ReportsPage() {
 
             {activeTab === "charts" && (
               <motion.div
-                className="grid grid-cols-1 lg:grid-cols-2 gap-6"
+                className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ duration: 0.5 }}
               >
                 <motion.div
-                  className="bg-gray-900/50 border border-purple-900/30 rounded-lg p-6 h-[500px]"
+                  className="bg-gray-900/50 border border-purple-900/30 rounded-lg p-4 sm:p-6 h-[300px] sm:h-[400px] md:h-[500px]"
                   initial={{ y: 20, opacity: 0 }}
                   animate={{ y: 0, opacity: 1 }}
                   transition={{ delay: 0.1 }}
@@ -271,16 +239,16 @@ export default function ReportsPage() {
                 </motion.div>
 
                 <motion.div
-                  className="bg-gray-900/50 border border-purple-900/30 rounded-lg p-6 h-[500px]"
+                  className="bg-gray-900/50 border border-purple-900/30 rounded-lg p-4 sm:p-6 h-[300px] sm:h-[400px] md:h-[500px]"
                   initial={{ y: 20, opacity: 0 }}
                   animate={{ y: 0, opacity: 1 }}
                   transition={{ delay: 0.2 }}
                 >
                   <div className="flex items-center justify-between mb-4">
-                    <h3 className="text-lg font-medium text-gray-200">
+                    <h3 className="text-base sm:text-lg font-medium text-gray-200">
                       Tendências Mensais
                     </h3>
-                    <LineChartIcon className="h-5 w-5 text-purple-400" />
+                    <LineChartIcon className="h-4 sm:h-5 w-4 sm:w-5 text-purple-400" />
                   </div>
                   <div className="h-[calc(100%-2rem)]">
                     <ResponsiveContainer width="100%" height="100%">
@@ -288,21 +256,22 @@ export default function ReportsPage() {
                         data={monthlyData}
                         margin={{
                           top: 5,
-                          right: 30,
-                          left: 20,
+                          right: 10,
+                          left: 0,
                           bottom: 5,
                         }}
                       >
                         <CartesianGrid strokeDasharray="3 3" stroke="#444" />
                         <XAxis
                           dataKey="month"
-                          tick={{ fill: "#9CA3AF" }}
+                          tick={{ fill: "#9CA3AF", fontSize: "10px" }}
                           axisLine={{ stroke: "#4B5563" }}
                         />
                         <YAxis
-                          tick={{ fill: "#9CA3AF" }}
+                          tick={{ fill: "#9CA3AF", fontSize: "10px" }}
                           axisLine={{ stroke: "#4B5563" }}
                           tickFormatter={(value) => `R$${value}`}
+                          width={60}
                         />
                         <Tooltip content={<CustomTooltip />} />
                         <Legend content={renderCustomizedLegend} />
@@ -311,7 +280,7 @@ export default function ReportsPage() {
                           dataKey="income"
                           name="Receitas"
                           stroke="#10B981"
-                          activeDot={{ r: 8 }}
+                          activeDot={{ r: 6 }}
                           strokeWidth={2}
                         />
                         <Line
@@ -319,7 +288,7 @@ export default function ReportsPage() {
                           dataKey="expense"
                           name="Despesas"
                           stroke="#EF4444"
-                          activeDot={{ r: 8 }}
+                          activeDot={{ r: 6 }}
                           strokeWidth={2}
                         />
                         <Line
@@ -327,7 +296,7 @@ export default function ReportsPage() {
                           dataKey="balance"
                           name="Saldo"
                           stroke="#8B5CF6"
-                          activeDot={{ r: 8 }}
+                          activeDot={{ r: 6 }}
                           strokeWidth={2}
                         />
                       </LineChart>
@@ -339,13 +308,13 @@ export default function ReportsPage() {
 
             {activeTab === "forecast" && (
               <motion.div
-                className="grid grid-cols-1 gap-6"
+                className="grid grid-cols-1 gap-4 sm:gap-6"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ duration: 0.5 }}
               >
                 <motion.div
-                  className="bg-gray-900/50 border border-purple-900/30 rounded-lg p-6 h-[500px]"
+                  className="bg-gray-900/50 border border-purple-900/30 rounded-lg p-4 sm:p-6 h-[300px] sm:h-[400px] md:h-[500px]"
                   initial={{ y: 20, opacity: 0 }}
                   animate={{ y: 0, opacity: 1 }}
                   transition={{ delay: 0.1 }}
@@ -357,19 +326,19 @@ export default function ReportsPage() {
                 </motion.div>
 
                 <motion.div
-                  className="bg-gray-900/50 border border-purple-900/30 rounded-lg p-6"
+                  className="bg-gray-900/50 border border-purple-900/30 rounded-lg p-4 sm:p-6"
                   initial={{ y: 20, opacity: 0 }}
                   animate={{ y: 0, opacity: 1 }}
                   transition={{ delay: 0.2 }}
                 >
                   <div className="flex items-center gap-2 mb-4">
-                    <Info className="h-5 w-5 text-blue-400" />
-                    <h3 className="text-lg font-medium text-gray-200">
+                    <Info className="h-4 sm:h-5 w-4 sm:w-5 text-blue-400" />
+                    <h3 className="text-base sm:text-lg font-medium text-gray-200">
                       Sobre as Previsões Financeiras
                     </h3>
                   </div>
 
-                  <div className="space-y-4 text-gray-300 text-sm">
+                  <div className="space-y-3 sm:space-y-4 text-gray-300 text-xs sm:text-sm">
                     <p>
                       As previsões financeiras são baseadas nos seus padrões históricos de
                       gastos e receitas, ajustadas para tendências sazonais e inflação.
@@ -383,7 +352,7 @@ export default function ReportsPage() {
                       </span>
                     </p>
 
-                    <ul className="list-disc pl-5 space-y-2">
+                    <ul className="list-disc pl-5 space-y-1 sm:space-y-2">
                       <li>
                         <span className="font-medium">Planejamento de orçamento:</span>{" "}
                         Use as previsões para antecipar meses com maiores despesas e
@@ -406,7 +375,7 @@ export default function ReportsPage() {
                       </li>
                     </ul>
 
-                    <p className="text-amber-400 bg-amber-900/20 p-3 rounded-lg">
+                    <p className="text-amber-400 bg-amber-900/20 p-2 sm:p-3 rounded-lg text-xs sm:text-sm">
                       <span className="font-medium">Nota:</span> Estas previsões são
                       estimativas baseadas em dados históricos e podem não refletir
                       mudanças futuras em sua situação financeira ou na economia. Revise e
@@ -450,12 +419,12 @@ export default function ReportsPage() {
 const CustomTooltip = ({ active, payload, label }) => {
   if (active && payload && payload.length) {
     return (
-      <div className="bg-gray-800 p-3 rounded border border-gray-700 shadow-lg">
-        <p className="text-sm font-medium text-white mb-2">{label}</p>
+      <div className="bg-gray-800 p-2 sm:p-3 rounded border border-gray-700 shadow-lg text-xs sm:text-sm">
+        <p className="font-medium text-white mb-1 sm:mb-2">{label}</p>
         {payload.map((entry, index) => (
           <p
             key={`item-${index}`}
-            className="text-xs flex justify-between gap-4"
+            className="flex justify-between gap-2 sm:gap-4"
             style={{ color: entry.color }}
           >
             <span>{entry.name}:</span>
@@ -478,11 +447,14 @@ const renderCustomizedLegend = (props) => {
   const { payload } = props;
 
   return (
-    <ul className="flex flex-wrap justify-center gap-x-4 gap-y-2 mt-4">
+    <ul className="flex flex-wrap justify-center gap-x-2 sm:gap-x-4 gap-y-1 sm:gap-y-2 mt-2 sm:mt-4">
       {payload.map((entry, index) => (
-        <li key={`item-${index}`} className="flex items-center gap-1 text-xs">
+        <li
+          key={`item-${index}`}
+          className="flex items-center gap-1 text-[10px] sm:text-xs"
+        >
           <div
-            className="w-3 h-3 rounded-full"
+            className="w-2 sm:w-3 h-2 sm:h-3 rounded-full"
             style={{ backgroundColor: entry.color }}
           />
           <span className="text-gray-300">{entry.value}</span>
