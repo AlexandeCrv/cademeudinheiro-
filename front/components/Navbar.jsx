@@ -17,7 +17,7 @@ export default function Navbar() {
     <nav className="bg-[#0D001B] font-aliance w-full z-50   h-28 ">
       <div className="max-w-7xl mx-auto sm:px-6 lg:px-8 flex  items-center justify-between">
         <div>
-          <Link href="/" className="flex items-center gap-2">
+          <Link href="/" className="flex items-center gap-2 ">
             <Image src="/logo.png" alt="Logo" width={150} height={150} />
           </Link>
         </div>
